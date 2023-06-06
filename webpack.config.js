@@ -1,6 +1,5 @@
 /*eslint-env node*/
 
-const webpack = require("webpack");
 const path = require("path");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -49,11 +48,6 @@ const plugins = [
   }),
   new MiniCssExtractPlugin({
     filename: isProd ? "style.[contenthash].css" : "style.css",
-  }),
-  new webpack.DefinePlugin({
-    "process.env.JSON_SERVER_PORT": JSON.stringify(
-      process.env.JSON_SERVER_PORT
-    ),
   }),
 ];
 

@@ -1,5 +1,2 @@
 node_modules
 .browserslistrc
-.env
-db.json
-json-server.json
