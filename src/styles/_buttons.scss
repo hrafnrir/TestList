@@ -1,0 +1,48 @@
+%submit-button {
+  @include big-button;
+
+  width: 380px;
+  height: 44px;
+  color: var(--first-text-color);
+  background-color: transparent;
+  border: 1px var(--first-text-color) solid;
+  border-radius: 24px;
+  transition: 0.2s linear;
+
+  &:active {
+    color: var(--main-bg-color);
+    border-color: var(--first-text-color);
+    background-color: var(--first-text-color);
+  }
+
+  @include breakpoint(large) {
+    &:hover {
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+      transition: 0.2s linear;
+    }
+  }
+}
+
+%link {
+  @include p-small;
+
+  color: var(--first-text-color);
+  border-bottom: 1px var(--first-text-color) solid;
+  transition: 0.2s linear;
+
+  &:active {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+  }
+
+  @include breakpoint(large) {
+    cursor: pointer;
+
+    &:hover {
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+      transition: 0.2s linear;
+    }
+  }
+}

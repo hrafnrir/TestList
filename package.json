@@ -5,13 +5,11 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "start": "cross-env SERVE=true webpack serve",
-    "eslint": "npx eslint --ext .jsx,.js src/",
-    "json-server": "json-server --watch db.json"
+    "eslint": "npx eslint --ext .jsx,.js src/"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
     "axios": "^1.4.0",
-    "dotenv": "^16.0.3",
     "formik": "^2.2.9",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.8.1",

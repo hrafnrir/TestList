@@ -1,0 +1,70 @@
+@import "../../../styles/breakpoints", "../../../styles/typography",
+  "../../../styles/buttons";
+
+.form {
+  margin: {
+    top: 48px;
+    bottom: 32px;
+  }
+
+  @include breakpoint(medium) {
+    margin: {
+      top: 90px;
+      bottom: 60px;
+    }
+  }
+
+  @include breakpoint(large) {
+    margin-top: 120px;
+  }
+}
+
+.wrapper {
+  margin-bottom: 22px;
+
+  &:nth-last-child(2) {
+    margin-bottom: 30px;
+  }
+
+  @include breakpoint(medium) {
+    margin-bottom: 36px;
+
+    &:nth-last-child(2) {
+      margin-bottom: 46px;
+    }
+  }
+}
+
+.input {
+  @include p-medium;
+
+  padding: 0 26px;
+  height: 44px;
+  width: 378px;
+  color: var(--first-text-color);
+  border-radius: 24px;
+  background-color: var(--input-color);
+  border: 1px var(--input-color) solid;
+  transition: border-color 0.2s linear;
+
+  &::placeholder {
+    color: var(--second-text-color);
+  }
+
+  &:focus {
+    border-color: var(--accent-color);
+    transition: border-color 0.2s linear;
+
+    &::placeholder {
+      opacity: 0;
+    }
+  }
+}
+
+.submitBtn {
+  @extend %submit-button;
+
+  @include breakpoint(large) {
+    cursor: pointer;
+  }
+}
