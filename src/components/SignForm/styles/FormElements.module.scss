@@ -1,6 +1,7 @@
 @import "../../../styles/breakpoints", "../../../styles/typography";
 
 .wrapper {
+  position: relative;
   margin: {
     bottom: 22px;
     left: auto;
@@ -25,7 +26,10 @@
 .input {
   @include p-medium;
 
-  padding: 0 26px;
+  padding: {
+    left: 26px;
+    right: 60px;
+  }
   height: 44px;
   width: 100%;
   color: var(--first-text-color);
@@ -61,4 +65,35 @@
 
   text-align: left;
   color: var(--warning-color);
+}
+
+.viewBtn {
+  --height: 14px;
+
+  position: absolute;
+  top: calc(44px / 2 - var(--height) / 2);
+  right: 18px;
+  width: 26px;
+  height: var(--height);
+  background: {
+    color: transparent;
+    image: var(--password-view);
+    repeat: no-repeat;
+    size: contain;
+    position: center;
+  }
+
+  transition: background-image 0.4s linear;
+
+  &:active {
+    background-image: var(--password-view_active);
+  }
+
+  @include breakpoint(large) {
+    cursor: pointer;
+
+    &:hover {
+      background-image: var(--password-view_active);
+    }
+  }
 }

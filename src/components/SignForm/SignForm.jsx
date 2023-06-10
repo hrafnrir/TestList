@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { signUpValidation, signInValidation } from "./formValidation.js";
 
-import { Input } from "./FormElements.jsx";
+import { TextInput, PasswordInput } from "./FormElements.jsx";
 
 import s from "./styles/SignForm.module.scss";
 
@@ -23,12 +23,11 @@ const SignForm = ({ isSignUp }) => {
       validationSchema={isSignUp ? signUpValidation : signInValidation}
     >
       <Form className={s.form}>
-        <Input type="text" name="username" placeholder="Username*" />
-        <Input type="password" name="password" placeholder="Password*" />
+        <TextInput type="text" name="username" placeholder="Username*" />
+        <PasswordInput name="password" placeholder="Password*" />
 
         {isSignUp && (
-          <Input
-            type="password"
+          <PasswordInput
             name="password_confirmation"
             placeholder="Confirm your password*"
           />

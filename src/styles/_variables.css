@@ -17,4 +17,9 @@ body[data-theme="light"] {
   --accent-color: #5e2dc7;
   --warning-color: #de532b;
   --input-color: #e9e9e9;
+
+  /* icons */
+
+  --password-view: url("../assets/icons/lightTheme/password-view.svg");
+  --password-view_active: url("../assets/icons/lightTheme/password-view_active.svg");
 }
