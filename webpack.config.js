@@ -9,8 +9,6 @@ const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
-require("dotenv").config();
-
 const isProd = process.env.NODE_ENV === "production";
 const isDev = !isProd;
 
