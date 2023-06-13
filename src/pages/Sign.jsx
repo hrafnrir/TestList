@@ -6,7 +6,9 @@ import SignForm from "../components/SignForm/SignForm.jsx";
 
 import s from "./styles/Sign.module.scss";
 
-export const Sign = ({ isSignUp }) => {
+export const Sign = ({ type }) => {
+  const isSignUp = type === "signup";
+
   const { heading, question, link, href } = isSignUp
     ? {
         heading: "Create an account",
@@ -41,7 +43,7 @@ export const Sign = ({ isSignUp }) => {
               Enter the information you entered while registering.
             </p>
           )}
-          <SignForm isSignUp={isSignUp} />
+          <SignForm key={type} isSignUp={isSignUp} />
           <p className={s.question}>
             {question}
             <Link to={href} className={s.link}>
@@ -55,5 +57,5 @@ export const Sign = ({ isSignUp }) => {
 };
 
 Sign.propTypes = {
-  isSignUp: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
 };

@@ -1,4 +1,5 @@
-@import "../../../styles/breakpoints", "../../../styles/typography";
+@import "../../../styles/breakpoints", "../../../styles/typography",
+  "../../../styles/animations";
 
 .wrapper {
   position: relative;
@@ -70,6 +71,7 @@
 .viewBtn {
   --height: 14px;
 
+  display: none;
   position: absolute;
   top: calc(44px / 2 - var(--height) / 2);
   right: 18px;
@@ -95,5 +97,19 @@
     &:hover {
       background-image: var(--password-view_active);
     }
+  }
+
+  &_fadeIn {
+    @include fade();
+
+    display: inline-block;
+    animation: fadeIn 0.4s forwards ease-out;
+  }
+
+  &_fadeOut {
+    @include fade();
+
+    display: inline-block;
+    animation: fadeOut 0.4s forwards ease-in;
   }
 }

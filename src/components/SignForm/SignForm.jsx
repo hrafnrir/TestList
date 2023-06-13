@@ -8,10 +8,16 @@ import { TextInput, PasswordInput } from "./FormElements.jsx";
 import s from "./styles/SignForm.module.scss";
 
 const initialValues = {
-  username: "",
-  password: "",
-  password_confirmation: "",
-  is_admin: false,
+  SIGNUP: {
+    username: "",
+    password: "",
+    password_confirmation: "",
+    is_admin: false,
+  },
+  SIGNIN: {
+    username: "",
+    password: "",
+  },
 };
 
 const SignForm = ({ isSignUp }) => {
@@ -19,7 +25,7 @@ const SignForm = ({ isSignUp }) => {
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={isSignUp ? initialValues.SIGNUP : initialValues.SIGNIN}
       validationSchema={isSignUp ? signUpValidation : signInValidation}
     >
       <Form className={s.form}>

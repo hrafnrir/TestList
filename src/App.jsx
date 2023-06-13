@@ -10,8 +10,8 @@ import { Sign as SignPage } from "./pages/Sign.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route path="signup" element={<SignPage isSignUp={true} />} />
-      <Route path="signin" element={<SignPage isSignUp={false} />} />
+      <Route path="signup" element={<SignPage type="signup" />} />
+      <Route path="signin" element={<SignPage type="signin" />} />
     </Route>
   )
 );
