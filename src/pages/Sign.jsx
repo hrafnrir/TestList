@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
@@ -8,6 +8,7 @@ import {
   selectLoading,
   selectSuccess,
   selectError,
+  selectSessionData,
 } from "../model/selectors/appSelectors.js";
 import { addSuccess, addError } from "../model/slices/appSlice.js";
 
@@ -22,6 +23,7 @@ export const Sign = ({ type }) => {
 
   const dispatch = useDispatch();
 
+  const sessionData = useSelector(selectSessionData);
   const loading = useSelector(selectLoading);
   const success = useSelector(selectSuccess);
   const error = useSelector(selectError);
@@ -61,7 +63,9 @@ export const Sign = ({ type }) => {
   });
   const formHeaderClass = cn(s.formHeader, { [s.formHeader_loading]: loading });
 
-  return (
+  return sessionData ? (
+    <Navigate to="/" />
+  ) : (
     <>
       <div className={rootClass}>
         <header className={s.header}>
