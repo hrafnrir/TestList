@@ -2,20 +2,10 @@
   "../../../styles/buttons";
 
 .form {
-  margin: {
-    top: 48px;
-    bottom: 32px;
-  }
+  margin-bottom: 32px;
 
   @include breakpoint(medium) {
-    margin: {
-      top: 90px;
-      bottom: 60px;
-    }
-  }
-
-  @include breakpoint(large) {
-    margin-top: 120px;
+    margin-bottom: 60px;
   }
 }
 

@@ -87,6 +87,30 @@ body {
   }
 }
 
+.formHeader {
+  margin-bottom: 56px;
+
+  @include breakpoint(medium) {
+    margin-bottom: 90px;
+  }
+
+  @include breakpoint(large) {
+    margin-bottom: 120px;
+  }
+
+  &_loading {
+    margin-bottom: 20px;
+
+    @include breakpoint(medium) {
+      margin-bottom: 36px;
+    }
+
+    @include breakpoint(large) {
+      margin-bottom: 66px;
+    }
+  }
+}
+
 .heading {
   @include h1;
 

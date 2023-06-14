@@ -4,10 +4,15 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
-import { selectSuccess, selectError } from "../model/selectors/appSelectors.js";
+import {
+  selectLoading,
+  selectSuccess,
+  selectError,
+} from "../model/selectors/appSelectors.js";
 import { addSuccess, addError } from "../model/slices/appSlice.js";
 
 import SignForm from "../components/SignForm/SignForm.jsx";
+import Loading from "../components/Loading/Loading.jsx";
 import RespPopup from "../components/Popup/RespPopup.jsx";
 
 import s from "./styles/Sign.module.scss";
@@ -17,6 +22,7 @@ export const Sign = ({ type }) => {
 
   const dispatch = useDispatch();
 
+  const loading = useSelector(selectLoading);
   const success = useSelector(selectSuccess);
   const error = useSelector(selectError);
 
@@ -53,6 +59,7 @@ export const Sign = ({ type }) => {
     [s.root_signup]: isSignUp,
     [s.root_signin]: !isSignUp,
   });
+  const formHeaderClass = cn(s.formHeader, { [s.formHeader_loading]: loading });
 
   return (
     <>
@@ -64,14 +71,17 @@ export const Sign = ({ type }) => {
         </header>
         <div className={s.wrapper}>
           <main className={s.formBlock}>
-            <h1 className={s.heading}>{heading}</h1>
+            <div className={formHeaderClass}>
+              <h1 className={s.heading}>{heading}</h1>
 
-            {isSignUp && (
-              <p className={s.description}>
-                Enter the information you entered while registering.
-              </p>
-            )}
+              {isSignUp && (
+                <p className={s.description}>
+                  Enter the information you entered while registering.
+                </p>
+              )}
 
+              {loading && <Loading />}
+            </div>
             <SignForm key={type} isSignUp={isSignUp} />
             <p className={s.question}>
               {question}
