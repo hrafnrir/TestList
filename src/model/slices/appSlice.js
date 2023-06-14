@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const session = JSON.parse(localStorage.getItem("session")) || null;
+
 const initialState = {
   loading: false,
   error: null,
   success: null,
-  session: null,
+  session,
 };
 
 const appSlice = createSlice({

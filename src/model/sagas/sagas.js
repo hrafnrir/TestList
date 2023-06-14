@@ -1,4 +1,5 @@
 import { call, put, takeLatest, all } from "redux-saga/effects";
+import { redirect } from "react-router-dom";
 import axios from "axios";
 
 import sagaActions from "./actions.js";
@@ -31,10 +32,15 @@ function* fetchAuthorization({ payload }) {
   try {
     const resp = yield call(
       async () =>
-        await instance.post("signin", payload).then((resp) => resp.data)
+        await instance.post("signin", payload).then((resp) => ({
+          username: resp.data.username,
+          is_admin: resp.data.is_admin,
+        }))
     );
-    yield put(addSession({ username: resp.username, is_admin: resp.is_admin }));
+    yield put(addSession(resp));
+    yield localStorage.setItem("session", JSON.stringify(resp));
     yield put(addLoading(false));
+    yield redirect("/");
   } catch (e) {
     yield put(addError(`Failed to login. ${e.message}.`));
     yield put(addLoading(false));
