@@ -22,7 +22,7 @@ function* fetchRegistration({ payload }) {
     yield put(addSuccess(`Success to sign up, ${resp.data.username}!`));
     yield put(addLoading(false));
   } catch (e) {
-    yield put(addError(`Failed to sign up. ${e.message}.`));
+    yield put(addError(`Failed to sign up: ${e.message.toLowerCase()}.`));
     yield put(addLoading(false));
   }
 }
@@ -42,7 +42,11 @@ function* fetchAuthorization({ payload }) {
     yield put(addLoading(false));
     yield redirect("/");
   } catch (e) {
-    yield put(addError(`Failed to login. ${e.message}.`));
+    yield put(
+      addError(
+        `Failed to login: ${e.response.data.error || e.message.toLowerCase()}.`
+      )
+    );
     yield put(addLoading(false));
   }
 }
