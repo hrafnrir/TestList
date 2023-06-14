@@ -44,3 +44,38 @@
     }
   }
 }
+
+%close-popup-button {
+  --width: 18px;
+
+  position: absolute;
+  top: -28px;
+  right: 0;
+  width: var(--width);
+  height: var(--width);
+  background: {
+    color: transparent;
+    image: var(--close-popup-btn_mob);
+    repeat: no-repeat;
+    size: var(--width);
+    position: contain;
+  }
+
+  transition: background-image 0.4s linear;
+
+  &:active {
+    background-image: var(--close-popup-btn_active);
+  }
+
+  @include breakpoint(medium) {
+    top: -32px;
+  }
+
+  @include breakpoint(large) {
+    cursor: pointer;
+
+    &:hover {
+      background-image: var(--close-popup-btn_active);
+    }
+  }
+}

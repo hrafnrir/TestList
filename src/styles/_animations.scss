@@ -19,3 +19,15 @@
     }
   }
 }
+
+@mixin moving() {
+  @keyframes movingUp {
+    from {
+      margin-top: 40px;
+    }
+
+    to {
+      margin-top: 0;
+    }
+  }
+}

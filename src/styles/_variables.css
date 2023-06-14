@@ -18,8 +18,16 @@ body[data-theme="light"] {
   --warning-color: #de532b;
   --input-color: #e9e9e9;
 
+  /* gradients */
+
+  --popup-dark-bg: rgb(16, 16, 16, 0.85);
+
   /* icons */
 
   --password-view: url("../assets/icons/lightTheme/password-view.svg");
   --password-view_active: url("../assets/icons/lightTheme/password-view_active.svg");
+  --close-popup-btn: url("../assets/icons/lightTheme/close-popup-btn.svg");
+  --close-popup-btn_active: url("../assets/icons/lightTheme/close-popup-btn_active.svg");
+  --close-popup-btn_mob: url("../assets/icons/lightTheme/close-popup-btn_mob.svg");
+  --error: url("../assets/icons/lightTheme/error.svg");
 }
