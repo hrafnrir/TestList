@@ -13,7 +13,7 @@ function* fetchRegistration({ payload }) {
   yield put(addLoading(true));
   try {
     const resp = yield call(async () => await instance.post("signup", payload));
-    yield put(addSuccess(`Success to sign up, ${resp.data.username}`));
+    yield put(addSuccess(`Success to sign up, ${resp.data.username}!`));
     yield put(addLoading(false));
   } catch (e) {
     yield put(addError(`Failed to sign up. ${e.message}.`));

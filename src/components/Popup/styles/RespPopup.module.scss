@@ -79,7 +79,6 @@
 .mainBlock {
   padding-left: 30px;
   background: {
-    image: var(--error);
     repeat: no-repeat;
     size: 18px;
     position: left top;
@@ -92,6 +91,14 @@
       position-y: 6px;
     }
   }
+
+  &_success {
+    background-image: var(--success);
+  }
+
+  &_error {
+    background-image: var(--error);
+  }
 }
 
 .heading {
@@ -102,6 +109,14 @@
 
   @include breakpoint(medium) {
     margin-bottom: 12px;
+  }
+
+  &_success {
+    color: var(--success-color);
+  }
+
+  &_error {
+    color: var(--warning-color);
   }
 }
 

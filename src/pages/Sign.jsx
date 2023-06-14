@@ -4,30 +4,23 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
-import { selectError } from "../model/selectors/appSelectors.js";
-import { addError } from "../model/slices/appSlice.js";
+import { selectSuccess, selectError } from "../model/selectors/appSelectors.js";
+import { addSuccess, addError } from "../model/slices/appSlice.js";
 
 import SignForm from "../components/SignForm/SignForm.jsx";
-import Error from "../components/Popup/Error.jsx";
+import RespPopup from "../components/Popup/RespPopup.jsx";
 
 import s from "./styles/Sign.module.scss";
 
 export const Sign = ({ type }) => {
-  const [isErrorPopupOpen, setErrorPopup] = useState(false);
+  const [isPopupOpen, setPopup] = useState({ success: false, error: false });
 
   const dispatch = useDispatch();
 
+  const success = useSelector(selectSuccess);
   const error = useSelector(selectError);
+
   const isSignUp = type === "signup";
-
-  useEffect(() => {
-    error && setErrorPopup(true);
-  }, [error]);
-
-  const handleCloseErrorPopup = () => {
-    setErrorPopup(false);
-    dispatch(addError(null));
-  };
 
   const { heading, question, link, href } = isSignUp
     ? {
@@ -42,6 +35,19 @@ export const Sign = ({ type }) => {
         link: "Register",
         href: "/signup",
       };
+
+  useEffect(() => {
+    success && setPopup((prevState) => ({ ...prevState, success: true }));
+  }, [success]);
+
+  useEffect(() => {
+    error && setPopup((prevState) => ({ ...prevState, error: true }));
+  }, [error]);
+
+  const handleClosePopup = (type) => {
+    setPopup((prevState) => ({ ...prevState, [type]: false }));
+    type === "success" ? dispatch(addSuccess(null)) : dispatch(addError(null));
+  };
 
   const rootClass = cn(s.root, {
     [s.root_signup]: isSignUp,
@@ -77,11 +83,21 @@ export const Sign = ({ type }) => {
         </div>
       </div>
 
-      {isErrorPopupOpen && (
-        <Error
-          visibility={isErrorPopupOpen}
+      {isPopupOpen.success && (
+        <RespPopup
+          visibility={isPopupOpen.success}
+          isSuccess={true}
+          message={success}
+          closePopup={() => handleClosePopup("success")}
+        />
+      )}
+
+      {isPopupOpen.error && (
+        <RespPopup
+          visibility={isPopupOpen.error}
+          isSuccess={false}
           message={error}
-          closePopup={handleCloseErrorPopup}
+          closePopup={() => handleClosePopup("error")}
         />
       )}
     </>

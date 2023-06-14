@@ -16,6 +16,7 @@ body[data-theme="light"] {
   --border-color: #d4d4d4;
   --accent-color: #5e2dc7;
   --warning-color: #de532b;
+  --success-color: #51af60;
   --input-color: #e9e9e9;
 
   /* gradients */
@@ -30,4 +31,5 @@ body[data-theme="light"] {
   --close-popup-btn_active: url("../assets/icons/lightTheme/close-popup-btn_active.svg");
   --close-popup-btn_mob: url("../assets/icons/lightTheme/close-popup-btn_mob.svg");
   --error: url("../assets/icons/lightTheme/error.svg");
+  --success: url("../assets/icons/lightTheme/success.svg");
 }
