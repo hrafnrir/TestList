@@ -4,6 +4,7 @@ const initialState = {
   loading: false,
   error: null,
   success: null,
+  session: null,
 };
 
 const appSlice = createSlice({
@@ -21,9 +22,14 @@ const appSlice = createSlice({
     addSuccess(state, action) {
       state.success = action.payload;
     },
+
+    addSession(state, action) {
+      state.session = action.payload;
+    },
   },
 });
 
-export const { addLoading, addError, addSuccess } = appSlice.actions;
+export const { addLoading, addError, addSuccess, addSession } =
+  appSlice.actions;
 
 export default appSlice.reducer;
