@@ -1,3 +1,5 @@
+/*eslint-env node*/
+
 import { call, put, takeLatest, all } from "redux-saga/effects";
 import { redirect } from "react-router-dom";
 import axios from "axios";
@@ -11,8 +13,8 @@ import {
 } from "../slices/appSlice.js";
 
 const instance = axios.create({
-  baseURL: "https://interns-test-fe.snp.agency/api/v1/",
-  headers: { "scope-key": "eVW&g97QJt%TVb$A", Accept: "application/json" },
+  baseURL: process.env.BASE_URL,
+  headers: { "scope-key": process.env.SCOPE_KEY, Accept: "application/json" },
 });
 
 function* fetchRegistration({ payload }) {

@@ -1,5 +1,6 @@
 /*eslint-env node*/
 
+const webpack = require("webpack");
 const path = require("path");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -8,6 +9,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+
+require("dotenv").config();
 
 const isProd = process.env.NODE_ENV === "production";
 const isDev = !isProd;
@@ -46,6 +49,10 @@ const plugins = [
   }),
   new MiniCssExtractPlugin({
     filename: isProd ? "style.[contenthash].css" : "style.css",
+  }),
+  new webpack.DefinePlugin({
+    "process.env.BASE_URL": JSON.stringify(process.env.BASE_URL),
+    "process.env.SCOPE_KEY": JSON.stringify(process.env.SCOPE_KEY),
   }),
 ];
 
