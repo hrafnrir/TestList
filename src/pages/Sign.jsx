@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
@@ -22,6 +22,7 @@ import s from "./styles/Sign.module.scss";
 export const Sign = ({ type }) => {
   const [isPopupOpen, setPopup] = useState({ success: false, error: false });
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const sessionData = useSelector(selectSessionData);
@@ -55,7 +56,13 @@ export const Sign = ({ type }) => {
 
   const handleClosePopup = (type) => {
     setPopup((prevState) => ({ ...prevState, [type]: false }));
-    type === "success" ? dispatch(addSuccess(null)) : dispatch(addError(null));
+
+    if (type === "success") {
+      dispatch(addSuccess(null));
+      isSignUp && navigate("/signin");
+    } else {
+      dispatch(addError(null));
+    }
   };
 
   const rootClass = cn(s.root, {
