@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
-import app from "./slices/appSlice.js";
+import session from "./slices/sessionSlice.js";
 import { rootSaga } from "./sagas/sagas.js";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
-  reducer: { app },
+  reducer: { session },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(sagaMiddleware),
 });

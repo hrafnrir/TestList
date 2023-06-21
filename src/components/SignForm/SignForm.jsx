@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import PropTypes from "prop-types";
 
 import { signUpValidation, signInValidation } from "./formValidation.js";
-import sagaActions from "../../model/sagas/actions.js";
+import { signUp, signIn } from "../../model/slices/sessionSlice.js";
 
 import { TextInput, PasswordInput } from "./FormElements.jsx";
 
@@ -26,10 +26,10 @@ const SignForm = ({ isSignUp }) => {
   const dispatch = useDispatch();
   const submitBtnValue = isSignUp ? "Create account" : "Login";
 
-  const actionType = isSignUp ? sagaActions.SIGNUP : sagaActions.SIGNIN;
+  const action = isSignUp ? signUp : signIn;
 
   const handleSubmit = (values) => {
-    dispatch({ type: actionType, payload: { ...values } });
+    dispatch(action({ ...values }));
   };
 
   return (

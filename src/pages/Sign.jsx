@@ -9,8 +9,8 @@ import {
   selectSuccess,
   selectError,
   selectSessionData,
-} from "../model/selectors/appSelectors.js";
-import { addSuccess, addError } from "../model/slices/appSlice.js";
+} from "../model/selectors/sessionSelectors.js";
+import { addSuccess, addError } from "../model/slices/sessionSlice.js";
 
 import SignForm from "../components/SignForm/SignForm.jsx";
 import Loading from "../components/Loading/Loading.jsx";

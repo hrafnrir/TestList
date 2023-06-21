@@ -4,13 +4,14 @@ import { call, put, takeLatest, all } from "redux-saga/effects";
 import { redirect } from "react-router-dom";
 import axios from "axios";
 
-import sagaActions from "./actions.js";
 import {
+  signUp,
+  signIn,
   addLoading,
   addError,
   addSuccess,
   addSession,
-} from "../slices/appSlice.js";
+} from "../slices/sessionSlice.js";
 
 const instance = axios.create({
   baseURL: process.env.BASE_URL,
@@ -58,6 +59,6 @@ function* fetchSignIn({ payload }) {
 }
 
 export function* rootSaga() {
-  yield all([yield takeLatest(sagaActions.SIGNUP, fetchSignUp)]);
-  yield all([yield takeLatest(sagaActions.SIGNIN, fetchSignIn)]);
+  yield all([yield takeLatest(signUp, fetchSignUp)]);
+  yield all([yield takeLatest(signIn, fetchSignIn)]);
 }

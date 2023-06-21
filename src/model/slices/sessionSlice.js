@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAction } from "@reduxjs/toolkit";
 
-const session = JSON.parse(localStorage.getItem("session")) || null;
+const sessionData = JSON.parse(localStorage.getItem("session")) || null;
 
 const initialState = {
   loading: false,
   error: null,
   success: null,
-  session,
+  sessionData,
 };
 
-const appSlice = createSlice({
-  name: "app",
+const sessionSlice = createSlice({
+  name: "session",
   initialState,
   reducers: {
     addLoading(state, action) {
@@ -26,12 +26,15 @@ const appSlice = createSlice({
     },
 
     addSession(state, action) {
-      state.session = action.payload;
+      state.sessionData = action.payload;
     },
   },
 });
 
-export const { addLoading, addError, addSuccess, addSession } =
-  appSlice.actions;
+export const signUp = createAction("session/signUp");
+export const signIn = createAction("session/signIn");
 
-export default appSlice.reducer;
+export const { addLoading, addError, addSuccess, addSession } =
+  sessionSlice.actions;
+
+export default sessionSlice.reducer;
