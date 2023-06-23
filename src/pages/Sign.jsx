@@ -19,7 +19,8 @@ import RespPopup from "../components/Popup/RespPopup.jsx";
 import s from "./styles/Sign.module.scss";
 
 export const Sign = ({ type }) => {
-  const [isPopupOpen, setPopup] = useState({ success: false, error: false });
+  const [isSuccess, setSuccess] = useState(true);
+  const [isPopupOpen, setPopup] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -46,19 +47,19 @@ export const Sign = ({ type }) => {
       };
 
   useEffect(() => {
-    success && setPopup((prevState) => ({ ...prevState, success: true }));
-  }, [success]);
-
-  useEffect(() => {
-    error && setPopup((prevState) => ({ ...prevState, error: true }));
+    error ? setSuccess(false) : setSuccess(true);
   }, [error]);
 
-  const handleClosePopup = (type) => {
-    setPopup((prevState) => ({ ...prevState, [type]: false }));
+  useEffect(() => {
+    (success || error) && setPopup(true);
+  }, [success, error]);
 
-    if (type === "success") {
+  const handleClosePopup = () => {
+    setPopup(false);
+
+    if (isSuccess) {
       dispatch(addSuccess(null));
-      isSignUp && navigate("/signin");
+      navigate("/signin");
     } else {
       dispatch(addError(null));
     }
@@ -104,21 +105,12 @@ export const Sign = ({ type }) => {
         </div>
       </div>
 
-      {isPopupOpen.success && (
+      {isPopupOpen && (
         <RespPopup
-          isSuccess={true}
-          message={success}
-          visibility={isPopupOpen.success}
-          closePopup={() => handleClosePopup("success")}
-        />
-      )}
-
-      {isPopupOpen.error && (
-        <RespPopup
-          isSuccess={false}
-          message={error}
-          visibility={isPopupOpen.error}
-          closePopup={() => handleClosePopup("error")}
+          isSuccess={isSuccess}
+          message={success || error}
+          visibility={isPopupOpen}
+          closePopup={handleClosePopup}
         />
       )}
     </>
