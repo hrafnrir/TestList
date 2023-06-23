@@ -36,16 +36,14 @@ function* fetchSignIn({ payload }) {
   yield put(addLoading(true));
 
   try {
-    const resp = yield call(
-      async () =>
-        await instance.post("signin", payload).then((resp) => ({
-          username: resp.data.username,
-          is_admin: resp.data.is_admin,
-        }))
-    );
+    const resp = yield call(instance.post, "signin", payload);
+    const data = {
+      username: resp.data.username,
+      is_admin: resp.data.is_admin,
+    };
 
-    yield put(addSession(resp));
-    yield localStorage.setItem("session", JSON.stringify(resp));
+    yield put(addSession(data));
+    yield localStorage.setItem("session", JSON.stringify(data));
     yield put(addLoading(false));
     yield redirect("/");
   } catch (e) {
