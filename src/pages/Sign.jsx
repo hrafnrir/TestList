@@ -14,7 +14,6 @@ import { addSuccess, addError } from "../model/slices/sessionSlice.js";
 
 import SignForm from "../components/SignForm/SignForm.jsx";
 import Loading from "../components/Loading/Loading.jsx";
-import Popup from "../components/Popup/Popup.jsx";
 import RespPopup from "../components/Popup/RespPopup.jsx";
 
 import s from "./styles/Sign.module.scss";
@@ -106,21 +105,21 @@ export const Sign = ({ type }) => {
       </div>
 
       {isPopupOpen.success && (
-        <Popup
+        <RespPopup
+          isSuccess={true}
+          message={success}
           visibility={isPopupOpen.success}
           closePopup={() => handleClosePopup("success")}
-        >
-          <RespPopup isSuccess={true} message={success} />
-        </Popup>
+        />
       )}
 
       {isPopupOpen.error && (
-        <Popup
+        <RespPopup
+          isSuccess={false}
+          message={error}
           visibility={isPopupOpen.error}
           closePopup={() => handleClosePopup("error")}
-        >
-          <RespPopup isSuccess={false} message={error} />
-        </Popup>
+        />
       )}
     </>
   );
