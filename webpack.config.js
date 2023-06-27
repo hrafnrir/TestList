@@ -51,9 +51,8 @@ const plugins = [
     filename: isProd ? "style.[contenthash].css" : "style.css",
   }),
   new webpack.DefinePlugin({
-    "process.env.JSON_SERVER_PORT": JSON.stringify(
-      process.env.JSON_SERVER_PORT
-    ),
+    "process.env.BASE_URL": JSON.stringify(process.env.BASE_URL),
+    "process.env.SCOPE_KEY": JSON.stringify(process.env.SCOPE_KEY),
   }),
 ];
 

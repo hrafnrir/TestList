@@ -1,0 +1,51 @@
+@import "../../../styles/breakpoints", "../../../styles/typography";
+
+.root {
+  padding-left: 30px;
+  background: {
+    repeat: no-repeat;
+    size: 18px;
+    position: left top;
+  }
+
+  @include breakpoint(medium) {
+    padding-left: 42px;
+    background: {
+      size: 20px;
+      position-y: 6px;
+    }
+  }
+
+  &_success {
+    background-image: var(--success);
+  }
+
+  &_error {
+    background-image: var(--error);
+  }
+}
+
+.heading {
+  @include h3;
+
+  margin-bottom: 8px;
+  color: var(--warning-color);
+
+  @include breakpoint(medium) {
+    margin-bottom: 12px;
+  }
+
+  &_success {
+    color: var(--success-color);
+  }
+
+  &_error {
+    color: var(--warning-color);
+  }
+}
+
+.message {
+  @include p-normal;
+
+  color: var(--first-text-color);
+}

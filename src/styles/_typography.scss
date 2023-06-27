@@ -1,0 +1,118 @@
+$main-font-family: Roboto, Arial, sans-serif;
+
+@mixin main-font {
+  font: {
+    family: $main-font-family;
+    style: normal;
+  }
+  letter-spacing: 0em;
+  line-height: 140%;
+}
+
+@mixin h1 {
+  @include main-font;
+
+  font: {
+    weight: 700;
+    size: 24px;
+  }
+
+  @include breakpoint(medium) {
+    font-size: 40px;
+  }
+}
+
+@mixin h2 {
+  @include main-font;
+
+  font: {
+    weight: 400;
+    size: 20px;
+  }
+
+  @include breakpoint(medium) {
+    font-size: 28px;
+  }
+}
+
+@mixin h3 {
+  @include main-font;
+
+  font: {
+    weight: 300;
+    size: 16px;
+  }
+
+  @include breakpoint(medium) {
+    font-size: 24px;
+  }
+}
+
+@mixin p-normal {
+  @include main-font;
+
+  font: {
+    weight: 400;
+    size: 14px;
+  }
+
+  @include breakpoint(medium) {
+    font-size: 18px;
+    line-height: 160%;
+  }
+}
+
+@mixin p-medium {
+  @include main-font;
+
+  font: {
+    weight: 300;
+    size: 14px;
+  }
+
+  @include breakpoint(medium) {
+    font-size: 18px;
+    line-height: 160%;
+  }
+}
+
+@mixin p-small {
+  @include main-font;
+
+  font: {
+    weight: 300;
+    size: 12px;
+  }
+
+  @include breakpoint(medium) {
+    font-size: 16px;
+  }
+}
+
+@mixin logo {
+  @include main-font;
+
+  font: {
+    weight: 900;
+    size: 14px;
+  }
+
+  @include breakpoint(medium) {
+    font-size: 22px;
+  }
+}
+
+@mixin big-button {
+  @include main-font;
+
+  font: {
+    weight: 300;
+    size: 12px;
+  }
+
+  text-transform: uppercase;
+
+  @include breakpoint(medium) {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,33 @@
+@mixin container($type) {
+  position: relative;
+  box-sizing: content-box;
+  margin: {
+    bottom: 20px;
+    left: 16px;
+    right: 16px;
+  }
+
+  min-width: 320px;
+
+  @if $type == main {
+    @include breakpoint(medium) {
+      margin: {
+        bottom: 50px;
+        left: 30px;
+        right: 30px;
+      }
+
+      min-width: 600px;
+    }
+
+    @include breakpoint(large) {
+      margin: {
+        bottom: 80px;
+        left: auto;
+        right: auto;
+      }
+
+      max-width: 1032px;
+    }
+  }
+}

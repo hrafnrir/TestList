@@ -1,0 +1,18 @@
+@import "../../../styles/breakpoints", "../../../styles/typography",
+  "../../../styles/buttons";
+
+.form {
+  margin-bottom: 32px;
+
+  @include breakpoint(medium) {
+    margin-bottom: 60px;
+  }
+}
+
+.submitBtn {
+  @extend %submit-button;
+
+  @include breakpoint(large) {
+    cursor: pointer;
+  }
+}

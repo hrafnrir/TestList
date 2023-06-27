@@ -1,0 +1,115 @@
+@import "../../../styles/breakpoints", "../../../styles/typography",
+  "../../../styles/animations";
+
+.wrapper {
+  position: relative;
+  margin: {
+    bottom: 22px;
+    left: auto;
+    right: auto;
+  }
+
+  width: 378px;
+
+  &:nth-last-child(2) {
+    margin-bottom: 30px;
+  }
+
+  @include breakpoint(medium) {
+    margin-bottom: 36px;
+
+    &:nth-last-child(2) {
+      margin-bottom: 46px;
+    }
+  }
+}
+
+.input {
+  @include p-medium;
+
+  padding: {
+    left: 26px;
+    right: 60px;
+  }
+  height: 44px;
+  width: 100%;
+  color: var(--first-text-color);
+  border-radius: 24px;
+  background-color: var(--input-color);
+  border: 1px var(--input-color) solid;
+  transition: border-color 0.2s linear;
+
+  &::placeholder {
+    color: var(--second-text-color);
+  }
+
+  &:focus {
+    border-color: var(--accent-color);
+    transition: border-color 0.2s linear;
+
+    &::placeholder {
+      opacity: 0;
+    }
+  }
+}
+
+.warn {
+  @include p-small;
+
+  display: block;
+  line-height: 160%;
+  margin: {
+    top: 12px;
+    left: 26px;
+    right: 26px;
+  }
+
+  text-align: left;
+  color: var(--warning-color);
+}
+
+.viewBtn {
+  --height: 14px;
+
+  display: none;
+  position: absolute;
+  top: calc(44px / 2 - var(--height) / 2);
+  right: 18px;
+  width: 26px;
+  height: var(--height);
+  background: {
+    color: transparent;
+    image: var(--password-view);
+    repeat: no-repeat;
+    size: contain;
+    position: center;
+  }
+
+  transition: background-image 0.4s linear;
+
+  &:active {
+    background-image: var(--password-view_active);
+  }
+
+  @include breakpoint(large) {
+    cursor: pointer;
+
+    &:hover {
+      background-image: var(--password-view_active);
+    }
+  }
+
+  &_fadeIn {
+    @include fade();
+
+    display: inline-block;
+    animation: fadeIn 0.4s forwards ease-out;
+  }
+
+  &_fadeOut {
+    @include fade();
+
+    display: inline-block;
+    animation: fadeOut 0.4s forwards ease-in;
+  }
+}
