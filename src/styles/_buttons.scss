@@ -81,3 +81,32 @@
     }
   }
 }
+
+%medium-button {
+  @include medium-button;
+
+  padding: 4px 16px;
+  color: var(--main-bg-color);
+  background-color: transparent;
+  border: 1px var(--main-bg-color) solid;
+  border-radius: 16px;
+  transition: 0.2s linear;
+
+  &:active {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+  }
+
+  @include breakpoint(medium) {
+    padding: 6px 20px;
+  }
+
+  @include breakpoint(large) {
+    cursor: pointer;
+
+    &:hover {
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+  }
+}

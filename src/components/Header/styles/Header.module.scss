@@ -1,0 +1,41 @@
+@import "../../../styles/breakpoints", "../../../styles/typography",
+  "../../../styles/containers", "../../../styles/buttons";
+
+.header {
+  margin-bottom: 40px;
+  height: 60px;
+  background-color: var(--first-text-color);
+
+  @include breakpoint(medium) {
+    margin-bottom: 80px;
+    height: 80px;
+  }
+}
+
+.headerContent {
+  @include container(main);
+
+  display: flex;
+  margin-bottom: 0 !important;
+  height: 100%;
+  align-items: center;
+}
+
+.logo {
+  @include logo;
+
+  margin-right: auto;
+  color: var(--main-bg-color);
+}
+
+.button {
+  @extend %medium-button;
+
+  &:last-child {
+    margin-left: 20px;
+
+    @include breakpoint(medium) {
+      margin-left: 28px;
+    }
+  }
+}

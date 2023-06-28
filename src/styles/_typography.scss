@@ -116,3 +116,18 @@ $main-font-family: Roboto, Arial, sans-serif;
     font-size: 14px;
   }
 }
+
+@mixin medium-button {
+  @include main-font;
+
+  font: {
+    weight: 300;
+    size: 10px;
+  }
+
+  text-transform: uppercase;
+
+  @include breakpoint(medium) {
+    font-size: 12px;
+  }
+}
