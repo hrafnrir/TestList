@@ -7,10 +7,12 @@ import axios from "axios";
 import {
   signUp,
   signIn,
+  logout,
   addLoading,
   addError,
   addSuccess,
   addSession,
+  endSession,
 } from "../slices/sessionSlice.js";
 
 const instance = axios.create({
@@ -56,7 +58,18 @@ function* fetchSignIn({ payload }) {
   }
 }
 
+function* fetchLogout() {
+  try {
+    yield call(instance.delete, "logout");
+    yield put(endSession());
+    yield localStorage.removeItem("session");
+  } catch (e) {
+    yield put(addError(`Failed to logout: ${e.message.toLowerCase()}.`));
+  }
+}
+
 export function* rootSaga() {
   yield all([yield takeLatest(signUp, fetchSignUp)]);
   yield all([yield takeLatest(signIn, fetchSignIn)]);
+  yield all([yield takeLatest(logout, fetchLogout)]);
 }

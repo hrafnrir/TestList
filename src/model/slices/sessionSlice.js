@@ -28,13 +28,18 @@ const sessionSlice = createSlice({
     addSession(state, action) {
       state.sessionData = action.payload;
     },
+
+    endSession(state) {
+      state.sessionData = null;
+    },
   },
 });
 
 export const signUp = createAction("session/signUp");
 export const signIn = createAction("session/signIn");
+export const logout = createAction("session/logout");
 
-export const { addLoading, addError, addSuccess, addSession } =
+export const { addLoading, addError, addSuccess, addSession, endSession } =
   sessionSlice.actions;
 
 export default sessionSlice.reducer;
