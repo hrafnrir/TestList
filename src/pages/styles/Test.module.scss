@@ -1,0 +1,165 @@
+@import "../../styles/breakpoints", "../../styles/typography",
+  "../../styles/containers", "../../styles/buttons";
+
+.root {
+  @include container(main);
+}
+
+.pageHeading {
+  @include h1;
+}
+
+.contentWrapper {
+  margin: 46px 0;
+
+  @include breakpoint(medium) {
+    margin: 84px 0;
+  }
+}
+
+.titleBlock {
+  margin-bottom: 42px;
+
+  @include breakpoint(medium) {
+    margin-bottom: 64px;
+  }
+}
+
+.blockHeading {
+  @include h4;
+
+  display: block;
+  margin: {
+    bottom: 18px;
+    left: 26px;
+  }
+
+  color: var(--second-text-color);
+
+  @include breakpoint(medium) {
+    margin-bottom: 26px;
+  }
+}
+
+.input {
+  @include p-medium;
+
+  padding: 0 26px;
+  height: 44px;
+  width: 100%;
+  color: var(--first-text-color);
+  border-radius: 24px;
+  background-color: var(--input-color);
+  border: 1px var(--input-color) solid;
+  transition: border-color 0.2s linear;
+
+  &::placeholder {
+    color: var(--second-text-color);
+  }
+
+  &:focus {
+    border-color: var(--accent-color);
+    transition: border-color 0.2s linear;
+
+    &::placeholder {
+      opacity: 0;
+    }
+  }
+}
+
+.questionsWrapper {
+  margin-top: 32px;
+
+  @include breakpoint(medium) {
+    margin: {
+      top: 52px;
+      left: 26px;
+    }
+  }
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+
+  @include breakpoint(medium) {
+    margin-bottom: 34px;
+  }
+
+  &:last-of-type {
+    margin-bottom: 32px;
+
+    @include breakpoint(medium) {
+      margin-bottom: 44px;
+    }
+  }
+}
+
+.questionHeading {
+  @include p-medium;
+
+  margin: {
+    bottom: 6px;
+    right: auto;
+  }
+
+  color: var(--first-text-color);
+  border-bottom: 1px var(--first-text-color) solid;
+
+  @include breakpoint(medium) {
+    margin-right: 0;
+  }
+}
+
+.questionBtn {
+  @include breakpoint(large) {
+    opacity: 0;
+
+    .question:hover & {
+      opacity: 1;
+    }
+  }
+
+  &_edit {
+    @include update-buttons(edit);
+
+    margin-left: 26px;
+
+    @include breakpoint(medium) {
+      margin-left: 34px;
+    }
+  }
+
+  &_delete {
+    @include update-buttons(delete);
+
+    margin-left: 20px;
+  }
+}
+
+.addQuestionBtn {
+  @extend %add-element-button;
+}
+
+.btnWrapper {
+  display: flex;
+  justify-content: space-between;
+
+  @include breakpoint(medium) {
+    display: block;
+    text-align: center;
+  }
+}
+
+.button {
+  &_save {
+    @include big-button(save);
+  }
+
+  &_delete {
+    @include big-button(delete);
+
+    margin-right: 40px;
+  }
+}

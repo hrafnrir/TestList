@@ -14,7 +14,7 @@ import { addSuccess, addError } from "../model/slices/sessionSlice.js";
 
 import SignForm from "../components/SignForm/SignForm.jsx";
 import Loading from "../components/Loading/Loading.jsx";
-import RespPopup from "../components/Popup/RespPopup.jsx";
+import ResponsePopup from "../components/Popup/ResponsePopup.jsx";
 
 import s from "./styles/Sign.module.scss";
 
@@ -106,7 +106,7 @@ export const Sign = ({ type }) => {
       </div>
 
       {isPopupOpen && (
-        <RespPopup
+        <ResponsePopup
           isSuccess={isSuccess}
           message={success || error}
           visibility={isPopupOpen}

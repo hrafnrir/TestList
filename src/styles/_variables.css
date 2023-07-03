@@ -32,4 +32,12 @@ body[data-theme="light"] {
   --close-popup-btn_mob: url("../assets/icons/lightTheme/close-popup-btn_mob.svg");
   --error: url("../assets/icons/lightTheme/error.svg");
   --success: url("../assets/icons/lightTheme/success.svg");
+  --edit-btn: url("../assets/icons/lightTheme/edit-btn.svg");
+  --edit-btn_active: url("../assets/icons/lightTheme/edit-btn_active.svg");
+  --delete-btn: url("../assets/icons/lightTheme/delete-btn.svg");
+  --delete-btn_active: url("../assets/icons/lightTheme/delete-btn_active.svg");
+  --checkbox: url("../assets/icons/lightTheme/checkbox.svg");
+  --checkbox_checked: url("../assets/icons/lightTheme/checkbox_checked.svg");
+  --plus: url("../assets/icons/lightTheme/plus.svg");
+  --minus: url("../assets/icons/lightTheme/minus.svg");
 }

@@ -48,6 +48,22 @@ $main-font-family: Roboto, Arial, sans-serif;
   }
 }
 
+@mixin h4 {
+  @include main-font;
+
+  font: {
+    weight: 400;
+    size: 12px;
+  }
+
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  @include breakpoint(medium) {
+    font-size: 16px;
+  }
+}
+
 @mixin p-normal {
   @include main-font;
 
@@ -125,6 +141,8 @@ $main-font-family: Roboto, Arial, sans-serif;
     size: 10px;
   }
 
+  line-height: 100%;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 
   @include breakpoint(medium) {

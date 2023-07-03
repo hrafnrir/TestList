@@ -82,23 +82,33 @@
   }
 }
 
-%medium-button {
+@mixin main-button($type) {
+  @if $type == light {
+    --color: var(--main-bg-color);
+    --color_active: var(--accent-color);
+  }
+
+  @if $type == dark {
+    --color: var(--first-text-color);
+    --color_active: var(--accent-color);
+  }
+
   @include medium-button;
 
-  padding: 4px 16px;
-  color: var(--main-bg-color);
+  padding: 6px 16px;
+  color: var(--color);
   background-color: transparent;
-  border: 1px var(--main-bg-color) solid;
+  border: 1px var(--color) solid;
   border-radius: 16px;
   transition: 0.2s linear;
 
   &:active {
-    color: var(--accent-color);
-    border-color: var(--accent-color);
+    color: var(--color_active);
+    border-color: var(--color_active);
   }
 
   @include breakpoint(medium) {
-    padding: 6px 20px;
+    padding: 8px 20px;
   }
 
   @include breakpoint(large) {
@@ -108,5 +118,169 @@
       color: var(--accent-color);
       border-color: var(--accent-color);
     }
+  }
+}
+
+@mixin update-buttons($type) {
+  background: {
+    color: transparent;
+    position: center;
+    repeat: no-repeat;
+    size: contain;
+  }
+
+  transition: 0.2s linear;
+
+  @include breakpoint(large) {
+    cursor: pointer;
+  }
+
+  @if $type == edit {
+    width: 24px;
+    height: 24px;
+    background-image: var(--edit-btn);
+
+    @include breakpoint(medium) {
+      min-width: 24px;
+      min-height: 24px;
+    }
+
+    &:active {
+      background-image: var(--edit-btn_active);
+    }
+
+    @include breakpoint(large) {
+      &:hover {
+        background-image: var(--edit-btn_active);
+      }
+    }
+  }
+
+  @if $type == delete {
+    width: 18px;
+    height: 18px;
+    background-image: var(--delete-btn);
+
+    @include breakpoint(medium) {
+      min-width: 18px;
+      min-height: 18px;
+    }
+
+    &:active {
+      background-image: var(--delete-btn_active);
+    }
+
+    @include breakpoint(large) {
+      &:hover {
+        background-image: var(--delete-btn_active);
+      }
+    }
+  }
+}
+
+%pseudo {
+  content: "";
+  position: absolute;
+  top: calc(var(--width) / 2 - 1px);
+  left: calc((var(--width) - (var(--width) / 100 * 45)) / 2);
+  height: 1px;
+  width: calc(var(--width) / 100 * 45);
+  background-color: var(--first-text-color);
+  transition: transform 1s ease;
+}
+
+%add-element-button {
+  --width: 32px;
+
+  position: relative;
+  width: var(--width);
+  height: var(--width);
+  background-color: transparent;
+  border: 1px var(--first-text-color) solid;
+  border-radius: 50%;
+
+  @include breakpoint(large) {
+    cursor: pointer;
+  }
+
+  &::before {
+    --deg: 0deg;
+
+    @extend %pseudo;
+  }
+
+  &::after {
+    --deg: 90deg;
+
+    @extend %pseudo;
+
+    transform: rotate(var(--deg));
+  }
+
+  &:hover::before,
+  &:hover::after {
+    @include breakpoint(large) {
+      transform: rotate(calc(var(--deg) + 180deg));
+    }
+  }
+}
+
+@mixin big-button($type) {
+  @include medium-button;
+
+  padding: 14px 48px;
+  color: var(--main-bg-color);
+  border-radius: 10px;
+  background-color: var(--accent-color);
+  transition: 0.2s linear;
+
+  @if $type == save {
+    background-color: var(--accent-color);
+  }
+
+  @if $type == delete {
+    background-color: var(--warning-color);
+  }
+
+  &:active {
+    background-color: var(--first-text-color);
+  }
+
+  @include breakpoint(medium) {
+    padding: {
+      left: 38px;
+      right: 38px;
+    }
+  }
+
+  @include breakpoint(large) {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--first-text-color);
+    }
+  }
+}
+
+@mixin number($type) {
+  height: 13px;
+  width: 13px;
+  background: {
+    color: transparent;
+    position: center;
+    repeat: no-repeat;
+    size: contain;
+  }
+
+  @if $type == plus {
+    background-image: var(--plus);
+  }
+
+  @if $type == minus {
+    background-image: var(--minus);
+  }
+
+  @include breakpoint(large) {
+    cursor: pointer;
   }
 }
