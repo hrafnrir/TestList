@@ -1,13 +1,8 @@
-/*eslint-env node*/
-
-import { call, put, takeLatest, all } from "redux-saga/effects";
+import { call, put } from "redux-saga/effects";
 import { redirect } from "react-router-dom";
-import axios from "axios";
 
+import { instance } from "./instance.js";
 import {
-  signUp,
-  signIn,
-  logout,
   addLoading,
   addError,
   addSuccess,
@@ -15,12 +10,7 @@ import {
   endSession,
 } from "../slices/sessionSlice.js";
 
-const instance = axios.create({
-  baseURL: process.env.BASE_URL,
-  headers: { "scope-key": process.env.SCOPE_KEY, Accept: "application/json" },
-});
-
-function* fetchSignUp({ payload }) {
+export function* fetchSignUp({ payload }) {
   yield put(addLoading(true));
 
   try {
@@ -34,7 +24,7 @@ function* fetchSignUp({ payload }) {
   }
 }
 
-function* fetchSignIn({ payload }) {
+export function* fetchSignIn({ payload }) {
   yield put(addLoading(true));
 
   try {
@@ -58,7 +48,7 @@ function* fetchSignIn({ payload }) {
   }
 }
 
-function* fetchLogout() {
+export function* fetchLogout() {
   try {
     yield call(instance.delete, "logout");
     yield put(endSession());
@@ -66,10 +56,4 @@ function* fetchLogout() {
   } catch (e) {
     yield put(addError(`Failed to logout: ${e.message.toLowerCase()}.`));
   }
-}
-
-export function* rootSaga() {
-  yield all([yield takeLatest(signUp, fetchSignUp)]);
-  yield all([yield takeLatest(signIn, fetchSignIn)]);
-  yield all([yield takeLatest(logout, fetchLogout)]);
 }

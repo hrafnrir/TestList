@@ -35,9 +35,9 @@ const sessionSlice = createSlice({
   },
 });
 
-export const signUp = createAction("session/signUp");
-export const signIn = createAction("session/signIn");
-export const logout = createAction("session/logout");
+export const SIGN_UP = createAction("session/SIGN_UP");
+export const SIGN_IN = createAction("session/SIGN_IN");
+export const LOGOUT = createAction("session/LOGOUT");
 
 export const { addLoading, addError, addSuccess, addSession, endSession } =
   sessionSlice.actions;

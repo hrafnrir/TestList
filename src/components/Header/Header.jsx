@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { selectSessionData } from "../../model/selectors/sessionSelectors.js";
-import { logout } from "../../model/slices/sessionSlice.js";
+import { LOGOUT } from "../../model/slices/sessionSlice.js";
 
 import s from "./styles/Header.module.scss";
 
@@ -12,7 +12,7 @@ const Header = () => {
   const isAdminSession = useSelector(selectSessionData)?.is_admin;
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(LOGOUT());
   };
 
   return (

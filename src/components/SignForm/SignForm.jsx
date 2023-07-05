@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import PropTypes from "prop-types";
 
 import { signUpValidation, signInValidation } from "./formValidation.js";
-import { signUp, signIn } from "../../model/slices/sessionSlice.js";
+import { SIGN_UP, SIGN_IN } from "../../model/slices/sessionSlice.js";
 
 import { TextInput, PasswordInput } from "./FormElements.jsx";
 
@@ -26,7 +26,7 @@ const SignForm = ({ isSignUp }) => {
   const dispatch = useDispatch();
   const submitBtnValue = isSignUp ? "Create account" : "Login";
 
-  const action = isSignUp ? signUp : signIn;
+  const action = isSignUp ? SIGN_UP : SIGN_IN;
 
   const handleSubmit = (values) => {
     dispatch(action({ ...values }));
