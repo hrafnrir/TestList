@@ -1,8 +1,10 @@
-import { useSelector } from "react-redux";
+import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import cn from "classnames";
 
 import { selectSessionData } from "../model/selectors/sessionSelectors.js";
+import { ADD_NEW_TEST } from "../model/slices/testSlice.js";
 
 import QuestionForm from "../components/QuestionForm/QuestionForm.jsx";
 
@@ -10,6 +12,13 @@ import s from "./styles/Test.module.scss";
 
 export const Test = () => {
   const isAdminSession = useSelector(selectSessionData)?.is_admin;
+
+  const dispatch = useDispatch();
+  const title = useRef(null);
+
+  const hadnleSubmit = () => {
+    dispatch(ADD_NEW_TEST({ title: title.current.value }));
+  };
 
   return !isAdminSession ? (
     <Navigate to="/" />
@@ -23,6 +32,7 @@ export const Test = () => {
             className={s.input}
             type="text"
             placeholder="Enter test title..."
+            ref={title}
           />
         </div>
         <div className={s.questionsBlock}>
@@ -48,7 +58,9 @@ export const Test = () => {
       </div>
       <div className={s.btnWrapper}>
         <button className={cn(s.button, s.button_delete)}>Delete</button>
-        <button className={cn(s.button, s.button_save)}>Save</button>
+        <button className={cn(s.button, s.button_save)} onClick={hadnleSubmit}>
+          Save
+        </button>
       </div>
     </main>
   );
