@@ -91,6 +91,13 @@ module.exports = {
     port: 3000,
     open: isDev,
     historyApiFallback: isDev,
+    proxy: {
+      "/api": {
+        target: process.env.API_DOMAIN,
+        secure: true,
+        changeOrigin: true,
+      },
+    },
   },
   devtool: isDev ? "source-map" : false,
   module: {
