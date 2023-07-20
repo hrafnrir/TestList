@@ -177,7 +177,7 @@
   }
 }
 
-.deleteBtn {
+.removeBtn {
   @include update-buttons(delete);
 
   grid-column: 2 / 3;
@@ -211,9 +211,13 @@
 .mainBtn {
   @include main-button(dark);
 
-  margin-left: 20px;
+  margin-left: auto;
 
-  @include breakpoint(medium) {
-    margin-left: 28px;
+  &:last-child {
+    margin-left: 20px;
+
+    @include breakpoint(medium) {
+      margin-left: 28px;
+    }
   }
 }

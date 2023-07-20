@@ -78,66 +78,6 @@
   }
 }
 
-.question {
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-
-  @include breakpoint(medium) {
-    margin-bottom: 34px;
-  }
-
-  &:last-of-type {
-    margin-bottom: 32px;
-
-    @include breakpoint(medium) {
-      margin-bottom: 44px;
-    }
-  }
-}
-
-.questionHeading {
-  @include p-medium;
-
-  margin: {
-    bottom: 6px;
-    right: auto;
-  }
-
-  color: var(--first-text-color);
-  border-bottom: 1px var(--first-text-color) solid;
-
-  @include breakpoint(medium) {
-    margin-right: 0;
-  }
-}
-
-.questionBtn {
-  @include breakpoint(large) {
-    opacity: 0;
-
-    .question:hover & {
-      opacity: 1;
-    }
-  }
-
-  &_edit {
-    @include update-buttons(edit);
-
-    margin-left: 26px;
-
-    @include breakpoint(medium) {
-      margin-left: 34px;
-    }
-  }
-
-  &_delete {
-    @include update-buttons(delete);
-
-    margin-left: 20px;
-  }
-}
-
 .addQuestionBtn {
   @extend %add-element-button;
 }

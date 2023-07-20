@@ -1,97 +1,162 @@
+import { useState, useEffect } from "react";
+import { Form, Formik } from "formik";
+import Select from "react-select";
+import { nanoid } from "@reduxjs/toolkit";
+import PropTypes from "prop-types";
 import cn from "classnames";
+
+import { TextInput, TextAnswer, NumberAnswer } from "./FormElements.jsx";
 
 import s from "./styles/QuestionForm.module.scss";
 
-const QuestionForm = () => {
+const typeOptions = [
+  { value: "single", label: "single" },
+  { value: "multiple", label: "multiple" },
+  { value: "number", label: "number" },
+];
+
+const initialAnswers = [
+  { id: nanoid(), value: "", isRight: false },
+  { id: nanoid(), value: "", isRight: false },
+];
+
+const QuestionForm = ({ isNew, question }) => {
+  const [questionType, setQuestionType] = useState(typeOptions[0]);
+  const [answers, setAnswers] = useState(initialAnswers);
+  const [answerElements, setAnswerElements] = useState([]);
+  const [removal, setRemoval] = useState(false);
+  const [removedAnswer, setRemovedAnswer] = useState(null);
+
+  useEffect(() => {
+    setAnswerElements(
+      answers.map(({ id, value, isRight }, index) => {
+        const num = index + 1;
+        return (
+          <TextAnswer
+            key={id}
+            commonId={id}
+            id={`text_answer_${id}`}
+            name={`text_answer_${id}`}
+            label={`Answer #${num}`}
+            initialValue={value}
+            isRight={isRight}
+            onAnswerChange={handleChangeAnswer}
+            onCheckboxChange={handleCheckAnswer}
+            removal={removal}
+            onRemove={handleRemove}
+          />
+        );
+      })
+    );
+  }, [answers, removal]);
+
+  useEffect(() => {
+    removedAnswer !== null &&
+      setAnswers(answers.filter(({ id }) => id !== removedAnswer));
+  }, [removedAnswer]);
+
+  useEffect(() => {
+    if (answers.length < 3 && removal) setRemoval(false);
+    if (answers.length > 2 && !removal) setRemoval(true);
+  }, [answers.length]);
+
+  const handleQuestionTypeChange = (option) => {
+    setQuestionType(option);
+  };
+
+  const handleChangeAnswer = (id, value) => {
+    setAnswers(
+      answers.map((item) => {
+        if (item.id === id) {
+          item.value = value;
+        }
+
+        return item;
+      })
+    );
+  };
+
+  const handleCheckAnswer = (id, checked) => () => {
+    setAnswers(
+      answers.map((item) => {
+        if (item.id === id) {
+          item.isRight = checked;
+        }
+
+        return item;
+      })
+    );
+  };
+
+  const handleAddNewAnswer = () => {
+    setAnswers((prevState) => [
+      ...prevState,
+      { id: nanoid(), value: "", isRight: false },
+    ]);
+  };
+
+  const handleRemove = (id) => () => {
+    setRemovedAnswer(id);
+  };
+
   return (
-    <form className={s.root}>
-      <div className={s.wrapper}>
-        <label className={s.inputLabel} htmlFor="question">
-          Question:
-        </label>
-        <input
-          className={s.input}
-          type="text"
+    <Formik initialValues={!isNew && question}>
+      <Form className={s.root}>
+        <TextInput
           name="question"
           id="question"
+          label="Question"
           placeholder="Enter your question..."
         />
-      </div>
-      <div className={s.wrapper}>
-        <label className={s.inputLabel} htmlFor="answer1">
-          Answer #1:
-        </label>
-        <input
-          className={s.input}
-          type="text"
-          name="answer1"
-          id="answer1"
-          placeholder="Enter the answer..."
-        />
-        <label className={s.checkboxLabel}>
-          Is correct:{" "}
-          <input
-            className={s.checkbox}
-            type="checkbox"
-            name="answer1_checkbox"
-          />
-        </label>
-        <button className={s.deleteBtn} type="button"></button>
-      </div>
-      <div className={s.wrapper}>
-        <label className={s.inputLabel} htmlFor="answer2">
-          Answer #2:
-        </label>
-        <input
-          className={s.input}
-          type="text"
-          name="answer2"
-          id="answer2"
-          placeholder="Enter the answer..."
-        />
-        <label className={s.checkboxLabel}>
-          Is correct:{" "}
-          <input
-            className={s.checkbox}
-            type="checkbox"
-            name="answer2_checkbox"
-          />
-        </label>
-        <button className={s.deleteBtn} type="button"></button>
-      </div>
-      <div className={s.wrapper}>
-        <label className={s.inputLabel} htmlFor="answer">
-          Answer:
-        </label>
-        <div className={s.numberInputWrapper}>
-          <button
-            className={cn(s.numberButton, s.numberButton_minus)}
-            type="button"
-          />
-          <input
-            className={s.numberInput}
-            type="number"
-            name="answer"
-            id="answer"
-            placeholder="0"
-          />
-          <button
-            className={cn(s.numberButton, s.numberButton_plus)}
-            type="button"
+
+        <div className={cn(s.wrapper, "wrapper")}>
+          <Select
+            classNamePrefix="reactSelect"
+            unstyled
+            name="question_type"
+            defaultValue={questionType}
+            options={typeOptions}
+            isSearchable={false}
+            blurInputOnSelect={false}
+            onChange={handleQuestionTypeChange}
           />
         </div>
-      </div>
-      <div className={s.buttonsWrapper}>
-        <button className={s.addAnswerBtn} type="button"></button>
-        <button className={s.mainBtn} type="button">
-          Cancel
-        </button>
-        <button className={s.mainBtn} type="button">
-          Save
-        </button>
-      </div>
-    </form>
+
+        {questionType.value === "number" ? (
+          <NumberAnswer
+            id="number_answer"
+            name="number_answer"
+            label="Answer"
+            placeholder="0"
+          />
+        ) : (
+          answerElements
+        )}
+
+        <div className={s.buttonsWrapper}>
+          {questionType.value !== "number" && (
+            <button
+              className={s.addAnswerBtn}
+              type="button"
+              onClick={handleAddNewAnswer}
+            ></button>
+          )}
+
+          <button className={s.mainBtn} type="button">
+            Cancel
+          </button>
+          <button className={s.mainBtn} type="button">
+            Save
+          </button>
+        </div>
+      </Form>
+    </Formik>
   );
 };
 
 export default QuestionForm;
+
+QuestionForm.propTypes = {
+  isNew: PropTypes.bool.isRequired,
+  question: PropTypes.object,
+};

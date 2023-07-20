@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import cn from "classnames";
@@ -7,17 +7,25 @@ import { selectSessionData } from "../model/selectors/sessionSelectors.js";
 import { ADD_NEW_TEST } from "../model/slices/testSlice.js";
 
 import QuestionForm from "../components/QuestionForm/QuestionForm.jsx";
+import QuestionElement from "../components/QuestionElement/QuestionElement.jsx";
 
 import s from "./styles/Test.module.scss";
 
 export const Test = () => {
+  const [isFormOpen, setForm] = useState(false);
+
   const isAdminSession = useSelector(selectSessionData)?.is_admin;
 
   const dispatch = useDispatch();
   const title = useRef(null);
 
+  const handleClickOnAddQuestionButton = () => {
+    setForm(true);
+  };
+
   const hadnleSubmit = () => {
-    dispatch(ADD_NEW_TEST({ title: title.current.value }));
+    const value = title.current.value.trim();
+    value && dispatch(ADD_NEW_TEST({ title: value }));
   };
 
   return !isAdminSession ? (
@@ -38,22 +46,16 @@ export const Test = () => {
         <div className={s.questionsBlock}>
           <h2 className={s.blockHeading}>Questions</h2>
           <div className={s.questionsWrapper}>
-            <div className={s.question}>
-              <h3 className={s.questionHeading}>
-                Choose one of the suggested answers
-              </h3>
+            <QuestionElement />
+            {!isFormOpen && (
               <button
-                className={cn(s.questionBtn, s.questionBtn_edit)}
+                className={s.addQuestionBtn}
                 type="button"
+                onClick={handleClickOnAddQuestionButton}
               ></button>
-              <button
-                className={cn(s.questionBtn, s.questionBtn_delete)}
-                type="button"
-              ></button>
-            </div>
-            <button className={s.addQuestionBtn} type="button"></button>
+            )}
           </div>
-          <QuestionForm />
+          {isFormOpen && <QuestionForm isNew={true} />}
         </div>
       </div>
       <div className={s.btnWrapper}>
