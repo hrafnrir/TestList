@@ -3,17 +3,17 @@ import { Form, Formik } from "formik";
 import Select from "react-select";
 import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
-import cn from "classnames";
 
 import { TextInput, TextAnswer, NumberAnswer } from "./FormElements.jsx";
 import { validation } from "./formValidation.js";
 
 import s from "./styles/QuestionForm.module.scss";
+import "./styles/DropDown.css";
 
 const typeOptions = [
-  { value: "single", label: "single" },
-  { value: "multiple", label: "multiple" },
-  { value: "number", label: "number" },
+  { value: "single", label: "One from a list" },
+  { value: "multiple", label: "Several from a list" },
+  { value: "number", label: "Numeric answer" },
 ];
 
 const initialAnswers = [
@@ -117,7 +117,8 @@ const QuestionForm = ({ isNew, question }) => {
           placeholder="Enter your question..."
         />
 
-        <div className={cn(s.wrapper, "wrapper")}>
+        <div className={s.wrapper}>
+          <div className={s.inputLabel}>Type:</div>
           <Select
             classNamePrefix="reactSelect"
             unstyled

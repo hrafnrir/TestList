@@ -30,6 +30,23 @@
   }
 }
 
+.inputLabel {
+  display: block;
+  grid-column: 1 / 2;
+  margin: {
+    bottom: 14px;
+    left: 26px;
+  }
+
+  color: var(--second-text-color);
+
+  @include breakpoint(medium) {
+    display: inline-block;
+    margin: 0;
+    min-width: 106px;
+  }
+}
+
 .buttonsWrapper {
   display: flex;
   align-items: center;

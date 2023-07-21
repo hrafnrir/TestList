@@ -13,7 +13,7 @@ body[data-theme="light"] {
   --main-bg-color: #f5f5f5;
   --first-text-color: #0e0e0e;
   --second-text-color: #bcbcbc;
-  --border-color: #d4d4d4;
+  --border-color: #dadada;
   --accent-color: #5e2dc7;
   --warning-color: #de532b;
   --success-color: #51af60;
@@ -40,4 +40,5 @@ body[data-theme="light"] {
   --checkbox_checked: url("../assets/icons/lightTheme/checkbox_checked.svg");
   --plus: url("../assets/icons/lightTheme/plus.svg");
   --minus: url("../assets/icons/lightTheme/minus.svg");
+  --select-arrow: url("../assets/icons/lightTheme/select-arrow.svg");
 }
