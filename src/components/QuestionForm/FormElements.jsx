@@ -1,16 +1,23 @@
+import { useField } from "formik";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
-import s from "./styles/QuestionForm.module.scss";
+import s from "./styles/FormElements.module.scss";
 
 export const TextInput = ({ id, label, ...props }) => {
+  const [field, meta] = useField(props);
   return (
-    <div className={s.wrapper}>
-      <label className={s.inputLabel} htmlFor={id}>
-        {label}:
-      </label>
-      <input className={s.input} type="text" id={id} {...props} />
-    </div>
+    <>
+      <div className={s.wrapper}>
+        <label className={s.inputLabel} htmlFor={id}>
+          {label}:
+        </label>
+        <input className={s.input} id={id} {...field} {...props} />
+      </div>
+      {meta.touched && meta.error && (
+        <span className={s.warn}>{meta.error}</span>
+      )}
+    </>
   );
 };
 

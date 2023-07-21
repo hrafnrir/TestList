@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import cn from "classnames";
 
 import { TextInput, TextAnswer, NumberAnswer } from "./FormElements.jsx";
+import { validation } from "./formValidation.js";
 
 import s from "./styles/QuestionForm.module.scss";
 
@@ -20,6 +21,10 @@ const initialAnswers = [
   { id: nanoid(), value: "", isRight: false },
 ];
 
+const clearFormValues = {
+  question: "",
+};
+
 const QuestionForm = ({ isNew, question }) => {
   const [questionType, setQuestionType] = useState(typeOptions[0]);
   const [answers, setAnswers] = useState(initialAnswers);
@@ -30,14 +35,13 @@ const QuestionForm = ({ isNew, question }) => {
   useEffect(() => {
     setAnswerElements(
       answers.map(({ id, value, isRight }, index) => {
-        const num = index + 1;
         return (
           <TextAnswer
             key={id}
             commonId={id}
             id={`text_answer_${id}`}
             name={`text_answer_${id}`}
-            label={`Answer #${num}`}
+            label={`Answer #${index + 1}`}
             initialValue={value}
             isRight={isRight}
             onAnswerChange={handleChangeAnswer}
@@ -76,11 +80,11 @@ const QuestionForm = ({ isNew, question }) => {
     );
   };
 
-  const handleCheckAnswer = (id, checked) => () => {
+  const handleCheckAnswer = (id, isRight) => () => {
     setAnswers(
       answers.map((item) => {
         if (item.id === id) {
-          item.isRight = checked;
+          item.isRight = isRight;
         }
 
         return item;
@@ -100,9 +104,13 @@ const QuestionForm = ({ isNew, question }) => {
   };
 
   return (
-    <Formik initialValues={!isNew && question}>
+    <Formik
+      initialValues={!isNew ? question : clearFormValues}
+      validationSchema={validation}
+    >
       <Form className={s.root}>
         <TextInput
+          type="text"
           name="question"
           id="question"
           label="Question"
