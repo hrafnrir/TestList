@@ -4,6 +4,8 @@ import cn from "classnames";
 
 import s from "./styles/FormElements.module.scss";
 
+const numberRegExp = /^(0|-?([1-9]\d*)?)/g;
+
 export const TextInput = ({ id, label, ...props }) => {
   const [field, meta] = useField(props);
   return (
@@ -72,7 +74,31 @@ export const TextAnswer = ({
   );
 };
 
-export const NumberAnswer = ({ label, ...props }) => {
+export const NumberAnswer = ({ initialValue, label, onChange, ...props }) => {
+  const handleIncrement = () => {
+    onChange(+initialValue + 1);
+  };
+
+  const handleDecrement = () => {
+    onChange(+initialValue - 1);
+  };
+
+  const handleNumberChange = (e) => {
+    const { value } = e.target;
+    const [validValue] = value.match(numberRegExp);
+
+    if (value === "") {
+      onChange("");
+      return;
+    }
+
+    validValue && onChange(validValue);
+  };
+
+  const handleBlur = () => {
+    initialValue === "-" && onChange(-1);
+  };
+
   return (
     <div className={s.wrapper}>
       <label className={s.inputLabel} htmlFor="answer">
@@ -82,11 +108,20 @@ export const NumberAnswer = ({ label, ...props }) => {
         <button
           className={cn(s.numberButton, s.numberButton_minus)}
           type="button"
+          onClick={handleDecrement}
         />
-        <input className={s.numberInput} type="number" {...props} />
+        <input
+          className={s.numberInput}
+          type="text"
+          value={initialValue}
+          onChange={handleNumberChange}
+          onBlur={handleBlur}
+          {...props}
+        />
         <button
           className={cn(s.numberButton, s.numberButton_plus)}
           type="button"
+          onClick={handleIncrement}
         />
       </div>
     </div>
@@ -112,5 +147,7 @@ TextAnswer.propTypes = {
 };
 
 NumberAnswer.propTypes = {
+  initialValue: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 };

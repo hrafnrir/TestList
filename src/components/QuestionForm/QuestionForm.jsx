@@ -27,14 +27,15 @@ const clearFormValues = {
 
 const QuestionForm = ({ isNew, question }) => {
   const [questionType, setQuestionType] = useState(typeOptions[0]);
-  const [answers, setAnswers] = useState(initialAnswers);
-  const [answerElements, setAnswerElements] = useState([]);
+  const [textAnswers, setTextAnswers] = useState(initialAnswers);
+  const [textAnswerElements, setTextAnswerElements] = useState([]);
   const [removal, setRemoval] = useState(false);
-  const [removedAnswer, setRemovedAnswer] = useState(null);
+  const [removedTextAnswer, setRemovedTextAnswer] = useState(null);
+  const [numberAnswer, setNumberAnswer] = useState("");
 
   useEffect(() => {
-    setAnswerElements(
-      answers.map(({ id, value, isRight }, index) => {
+    setTextAnswerElements(
+      textAnswers.map(({ id, value, isRight }, index) => {
         return (
           <TextAnswer
             key={id}
@@ -44,33 +45,33 @@ const QuestionForm = ({ isNew, question }) => {
             label={`Answer #${index + 1}`}
             initialValue={value}
             isRight={isRight}
-            onAnswerChange={handleChangeAnswer}
-            onCheckboxChange={handleCheckAnswer}
+            onAnswerChange={handleTextAnswerChange}
+            onCheckboxChange={handleTextAnswerCheck}
             removal={removal}
-            onRemove={handleRemove}
+            onRemove={handleTextAnswerRemove}
           />
         );
       })
     );
-  }, [answers, removal]);
+  }, [textAnswers, removal]);
 
   useEffect(() => {
-    removedAnswer !== null &&
-      setAnswers(answers.filter(({ id }) => id !== removedAnswer));
-  }, [removedAnswer]);
+    removedTextAnswer !== null &&
+      setTextAnswers(textAnswers.filter(({ id }) => id !== removedTextAnswer));
+  }, [removedTextAnswer]);
 
   useEffect(() => {
-    if (answers.length < 3 && removal) setRemoval(false);
-    if (answers.length > 2 && !removal) setRemoval(true);
-  }, [answers.length]);
+    if (textAnswers.length < 3 && removal) setRemoval(false);
+    if (textAnswers.length > 2 && !removal) setRemoval(true);
+  }, [textAnswers.length]);
 
   const handleQuestionTypeChange = (option) => {
     setQuestionType(option);
   };
 
-  const handleChangeAnswer = (id, value) => {
-    setAnswers(
-      answers.map((item) => {
+  const handleTextAnswerChange = (id, value) => {
+    setTextAnswers(
+      textAnswers.map((item) => {
         if (item.id === id) {
           item.value = value;
         }
@@ -80,9 +81,9 @@ const QuestionForm = ({ isNew, question }) => {
     );
   };
 
-  const handleCheckAnswer = (id, isRight) => () => {
-    setAnswers(
-      answers.map((item) => {
+  const handleTextAnswerCheck = (id, isRight) => () => {
+    setTextAnswers(
+      textAnswers.map((item) => {
         if (item.id === id) {
           item.isRight = isRight;
         }
@@ -92,15 +93,19 @@ const QuestionForm = ({ isNew, question }) => {
     );
   };
 
-  const handleAddNewAnswer = () => {
-    setAnswers((prevState) => [
+  const handleAddNewTextAnswer = () => {
+    setTextAnswers((prevState) => [
       ...prevState,
       { id: nanoid(), value: "", isRight: false },
     ]);
   };
 
-  const handleRemove = (id) => () => {
-    setRemovedAnswer(id);
+  const handleTextAnswerRemove = (id) => () => {
+    setRemovedTextAnswer(id);
+  };
+
+  const handleNumberAnswerChange = (number) => {
+    setNumberAnswer(String(number));
   };
 
   return (
@@ -135,11 +140,13 @@ const QuestionForm = ({ isNew, question }) => {
           <NumberAnswer
             id="number_answer"
             name="number_answer"
+            initialValue={numberAnswer}
             label="Answer"
             placeholder="0"
+            onChange={handleNumberAnswerChange}
           />
         ) : (
-          answerElements
+          textAnswerElements
         )}
 
         <div className={s.buttonsWrapper}>
@@ -147,7 +154,7 @@ const QuestionForm = ({ isNew, question }) => {
             <button
               className={s.addAnswerBtn}
               type="button"
-              onClick={handleAddNewAnswer}
+              onClick={handleAddNewTextAnswer}
             ></button>
           )}
 
