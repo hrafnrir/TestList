@@ -73,3 +73,14 @@
     }
   }
 }
+
+.warn {
+  @include p-small;
+
+  color: var(--warning-color);
+  margin-left: 26px;
+
+  @include breakpoint(medium) {
+    margin-left: 0;
+  }
+}
