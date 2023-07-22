@@ -4,16 +4,20 @@ import Select from "react-select";
 import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
 
+import { questionTypes } from "./constants.js";
 import { TextInput, TextAnswer, NumberAnswer } from "./FormElements.jsx";
-import { validation } from "./formValidation.js";
+import {
+  commonValidation,
+  getValidationBeforeSubmitting,
+} from "./formValidation.js";
 
 import s from "./styles/QuestionForm.module.scss";
 import "./styles/DropDown.css";
 
-const typeOptions = [
-  { value: "single", label: "One from a list" },
-  { value: "multiple", label: "Several from a list" },
-  { value: "number", label: "Numeric answer" },
+const questionTypeOptions = [
+  { value: questionTypes.SINGLE, label: "One from a list" },
+  { value: questionTypes.MULTIPLE, label: "Several from a list" },
+  { value: questionTypes.NUMBER, label: "Numeric answer" },
 ];
 
 const initialAnswers = [
@@ -26,12 +30,13 @@ const clearFormValues = {
 };
 
 const QuestionForm = ({ isNew, question }) => {
-  const [questionType, setQuestionType] = useState(typeOptions[0]);
+  const [questionType, setQuestionType] = useState(questionTypeOptions[0]);
   const [textAnswers, setTextAnswers] = useState(initialAnswers);
   const [textAnswerElements, setTextAnswerElements] = useState([]);
   const [removal, setRemoval] = useState(false);
   const [removedTextAnswer, setRemovedTextAnswer] = useState(null);
   const [numberAnswer, setNumberAnswer] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setTextAnswerElements(
@@ -67,6 +72,7 @@ const QuestionForm = ({ isNew, question }) => {
 
   const handleQuestionTypeChange = (option) => {
     setQuestionType(option);
+    error && setError(null);
   };
 
   const handleTextAnswerChange = (id, value) => {
@@ -108,10 +114,37 @@ const QuestionForm = ({ isNew, question }) => {
     setNumberAnswer(String(number));
   };
 
+  const handleFormSubmit = (value) => {
+    if (questionType.value === questionTypes.NUMBER) {
+      if (
+        !getValidationBeforeSubmitting({
+          type: questionType.value,
+          setError,
+          numberAnswer,
+        })
+      )
+        return;
+    }
+
+    if (questionType.value === questionTypes.SINGLE) {
+      if (
+        !getValidationBeforeSubmitting({
+          type: questionType.value,
+          setError,
+          textAnswers,
+        })
+      )
+        return;
+    }
+
+    error && setError(null);
+  };
+
   return (
     <Formik
       initialValues={!isNew ? question : clearFormValues}
-      validationSchema={validation}
+      validationSchema={commonValidation}
+      onSubmit={(values) => handleFormSubmit(values)}
     >
       <Form className={s.root}>
         <TextInput
@@ -129,14 +162,14 @@ const QuestionForm = ({ isNew, question }) => {
             unstyled
             name="question_type"
             defaultValue={questionType}
-            options={typeOptions}
+            options={questionTypeOptions}
             isSearchable={false}
             blurInputOnSelect={false}
             onChange={handleQuestionTypeChange}
           />
         </div>
 
-        {questionType.value === "number" ? (
+        {questionType.value === questionTypes.NUMBER ? (
           <NumberAnswer
             id="number_answer"
             name="number_answer"
@@ -149,8 +182,10 @@ const QuestionForm = ({ isNew, question }) => {
           textAnswerElements
         )}
 
+        {error && <div className={s.warn}>{error}</div>}
+
         <div className={s.buttonsWrapper}>
-          {questionType.value !== "number" && (
+          {questionType.value !== questionTypes.NUMBER && (
             <button
               className={s.addAnswerBtn}
               type="button"
@@ -161,7 +196,7 @@ const QuestionForm = ({ isNew, question }) => {
           <button className={s.mainBtn} type="button">
             Cancel
           </button>
-          <button className={s.mainBtn} type="button">
+          <button className={s.mainBtn} type="submit">
             Save
           </button>
         </div>
