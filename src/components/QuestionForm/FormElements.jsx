@@ -6,28 +6,24 @@ import s from "./styles/FormElements.module.scss";
 
 const numberRegExp = /^(0|-?([1-9]\d*)?)/g;
 
-export const TextInput = ({ id, label, ...props }) => {
-  const [field, meta] = useField(props);
+export const TextInput = ({ label, ...props }) => {
+  const [field, { touched, error }] = useField(props);
   return (
     <>
       <div className={s.wrapper}>
-        <label className={s.inputLabel} htmlFor={id}>
+        <label className={s.inputLabel} htmlFor={field.name}>
           {label}:
         </label>
-        <input className={s.input} id={id} {...field} {...props} />
+        <input className={s.input} id={field.name} {...field} {...props} />
       </div>
 
-      {meta.touched && meta.error && (
-        <span className={s.warn}>{meta.error}</span>
-      )}
+      {touched && error && <span className={s.warn}>{error}</span>}
     </>
   );
 };
 
 export const TextAnswer = ({
-  commonId,
   id,
-  name,
   label,
   initialValue,
   isRight,
@@ -35,20 +31,23 @@ export const TextAnswer = ({
   onCheckboxChange,
   removal,
   onRemove,
+  ...props
 }) => {
+  const [{ name }] = useField(props);
+
   const handleAnswerChange = (e) => {
-    onAnswerChange(commonId, e.target.value);
+    onAnswerChange(id, e.target.value);
   };
 
   return (
     <div className={s.wrapper}>
-      <label className={s.inputLabel} htmlFor={id}>
+      <label className={s.inputLabel} htmlFor={name}>
         {label}:
       </label>
       <input
         className={s.input}
         type="text"
-        id={id}
+        id={name}
         name={name}
         value={initialValue}
         placeholder="Enter the answer..."
@@ -61,7 +60,7 @@ export const TextAnswer = ({
           type="checkbox"
           name={`${name}_checkbox`}
           checked={isRight}
-          onChange={onCheckboxChange(commonId, !isRight)}
+          onChange={onCheckboxChange(id, !isRight)}
         />
       </label>
 
@@ -69,7 +68,7 @@ export const TextAnswer = ({
         <button
           className={s.removeBtn}
           type="button"
-          onClick={onRemove(commonId)}
+          onClick={onRemove(id)}
         ></button>
       )}
     </div>
@@ -77,11 +76,10 @@ export const TextAnswer = ({
 };
 
 export const NumberAnswer = ({ label, ...props }) => {
-  const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
+  const [field, { value, initialValue }, { setValue }] = useField(props);
 
   const handleCount = (term) => () => {
-    setValue(+meta.value + term);
+    setValue(+value + term);
   };
 
   const handleNumberChange = (e) => {
@@ -97,7 +95,7 @@ export const NumberAnswer = ({ label, ...props }) => {
   };
 
   const handleBlur = () => {
-    meta.value === "-" && setValue(-1);
+    value === "-" && setValue(-1);
   };
 
   return (
@@ -115,7 +113,7 @@ export const NumberAnswer = ({ label, ...props }) => {
           className={s.numberInput}
           type="text"
           id={field.name}
-          value={meta.initialValue}
+          value={initialValue}
           {...field}
           {...props}
           onChange={handleNumberChange}
@@ -133,13 +131,10 @@ export const NumberAnswer = ({ label, ...props }) => {
 
 TextInput.propTypes = {
   label: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
 };
 
 TextAnswer.propTypes = {
-  commonId: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   initialValue: PropTypes.string.isRequired,
   isRight: PropTypes.bool.isRequired,
