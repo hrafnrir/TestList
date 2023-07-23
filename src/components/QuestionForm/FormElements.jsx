@@ -16,6 +16,7 @@ export const TextInput = ({ id, label, ...props }) => {
         </label>
         <input className={s.input} id={id} {...field} {...props} />
       </div>
+
       {meta.touched && meta.error && (
         <span className={s.warn}>{meta.error}</span>
       )}
@@ -49,7 +50,7 @@ export const TextAnswer = ({
         type="text"
         id={id}
         name={name}
-        defaultValue={initialValue}
+        value={initialValue}
         placeholder="Enter the answer..."
         onChange={handleAnswerChange}
       />
@@ -59,10 +60,11 @@ export const TextAnswer = ({
           className={s.checkbox}
           type="checkbox"
           name={`${name}_checkbox`}
-          defaultChecked={isRight}
+          checked={isRight}
           onChange={onCheckboxChange(commonId, !isRight)}
         />
       </label>
+
       {removal && (
         <button
           className={s.removeBtn}
@@ -74,54 +76,55 @@ export const TextAnswer = ({
   );
 };
 
-export const NumberAnswer = ({ initialValue, label, onChange, ...props }) => {
-  const handleIncrement = () => {
-    onChange(+initialValue + 1);
-  };
+export const NumberAnswer = ({ label, ...props }) => {
+  const [field, meta, helpers] = useField(props);
+  const { setValue } = helpers;
 
-  const handleDecrement = () => {
-    onChange(+initialValue - 1);
+  const handleCount = (term) => () => {
+    setValue(+meta.value + term);
   };
 
   const handleNumberChange = (e) => {
     const { value } = e.target;
-    const [validValue] = value.match(numberRegExp);
 
     if (value === "") {
-      onChange("");
+      setValue("");
       return;
     }
 
-    validValue && onChange(validValue);
+    const [validValue] = value.match(numberRegExp);
+    validValue && setValue(validValue);
   };
 
   const handleBlur = () => {
-    initialValue === "-" && onChange(-1);
+    meta.value === "-" && setValue(-1);
   };
 
   return (
     <div className={s.wrapper}>
-      <label className={s.inputLabel} htmlFor="answer">
+      <label className={s.inputLabel} htmlFor={field.name}>
         {label}:
       </label>
       <div className={s.numberInputWrapper}>
         <button
           className={cn(s.numberButton, s.numberButton_minus)}
           type="button"
-          onClick={handleDecrement}
+          onClick={handleCount(-1)}
         />
         <input
           className={s.numberInput}
           type="text"
-          value={initialValue}
+          id={field.name}
+          value={meta.initialValue}
+          {...field}
+          {...props}
           onChange={handleNumberChange}
           onBlur={handleBlur}
-          {...props}
         />
         <button
           className={cn(s.numberButton, s.numberButton_plus)}
           type="button"
-          onClick={handleIncrement}
+          onClick={handleCount(1)}
         />
       </div>
     </div>
@@ -147,7 +150,5 @@ TextAnswer.propTypes = {
 };
 
 NumberAnswer.propTypes = {
-  initialValue: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
 };
