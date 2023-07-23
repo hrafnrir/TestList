@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Form, Formik } from "formik";
 import Select from "react-select";
 import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
 
 import { questionTypes } from "./constants.js";
-import { TextInput, TextAnswer, NumberAnswer } from "./FormElements.jsx";
-import {
-  commonValidation,
-  getValidationBeforeSubmitting,
-} from "./formValidation.js";
+import { commonValidation, getSubmittingValidation } from "./formValidation.js";
+
+import TextAnswerElements from "./TextAnswerElements.jsx";
+import { TextInput, NumberAnswer } from "./FormElements.jsx";
 
 import s from "./styles/QuestionForm.module.scss";
 import "./styles/DropDown.css";
@@ -17,140 +16,69 @@ import "./styles/DropDown.css";
 const questionTypeOptions = [
   { value: questionTypes.SINGLE, label: "One from a list" },
   { value: questionTypes.MULTIPLE, label: "Several from a list" },
-  { value: questionTypes.NUMBER, label: "Numeric answer" },
+  { value: questionTypes.NUMBER, label: "Numerical answer" },
 ];
 
-const initialAnswers = [
-  { id: nanoid(), value: "", isRight: false },
-  { id: nanoid(), value: "", isRight: false },
-];
-
-const clearFormValues = {
-  question: "",
-};
-
-const QuestionForm = ({ isNew, question }) => {
-  const [questionType, setQuestionType] = useState(questionTypeOptions[0]);
-  const [textAnswers, setTextAnswers] = useState(initialAnswers);
-  const [textAnswerElements, setTextAnswerElements] = useState([]);
-  const [removal, setRemoval] = useState(false);
-  const [removedTextAnswer, setRemovedTextAnswer] = useState(null);
-  const [numberAnswer, setNumberAnswer] = useState("");
+const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
+  const [type, setType] = useState(
+    isNew ? questionTypes.SINGLE : question.type
+  );
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setTextAnswerElements(
-      textAnswers.map(({ id, value, isRight }, index) => {
-        return (
-          <TextAnswer
-            key={id}
-            commonId={id}
-            id={`text_answer_${id}`}
-            name={`text_answer_${id}`}
-            label={`Answer #${index + 1}`}
-            initialValue={value}
-            isRight={isRight}
-            onAnswerChange={handleTextAnswerChange}
-            onCheckboxChange={handleTextAnswerCheck}
-            removal={removal}
-            onRemove={handleTextAnswerRemove}
-          />
-        );
-      })
-    );
-  }, [textAnswers, removal]);
+  const defaultQuestionType = questionTypeOptions.find(
+    ({ value }) => value === type
+  );
 
-  useEffect(() => {
-    removedTextAnswer !== null &&
-      setTextAnswers(textAnswers.filter(({ id }) => id !== removedTextAnswer));
-  }, [removedTextAnswer]);
-
-  useEffect(() => {
-    if (textAnswers.length < 3 && removal) setRemoval(false);
-    if (textAnswers.length > 2 && !removal) setRemoval(true);
-  }, [textAnswers.length]);
-
-  const handleQuestionTypeChange = (option) => {
-    setQuestionType(option);
-    error && setError(null);
-  };
-
-  const handleTextAnswerChange = (id, value) => {
-    setTextAnswers(
-      textAnswers.map((item) => {
-        if (item.id === id) {
-          item.value = value;
-        }
-
-        return item;
-      })
-    );
-  };
-
-  const handleTextAnswerCheck = (id, isRight) => () => {
-    setTextAnswers(
-      textAnswers.map((item) => {
-        if (item.id === id) {
-          item.isRight = isRight;
-        }
-
-        return item;
-      })
-    );
-  };
-
-  const handleAddNewTextAnswer = () => {
-    setTextAnswers((prevState) => [
-      ...prevState,
+  const clearFormValues = {
+    title: "",
+    number_answer: "",
+    answers: [
       { id: nanoid(), value: "", isRight: false },
-    ]);
+      { id: nanoid(), value: "", isRight: false },
+    ],
   };
 
-  const handleTextAnswerRemove = (id) => () => {
-    setRemovedTextAnswer(id);
+  const handleQuestionTypeChange = ({ value }) => {
+    setType(value);
+    error && setError(null);
   };
 
-  const handleNumberAnswerChange = (number) => {
-    setNumberAnswer(String(number));
-  };
+  const handleFormSubmit = (values) => {
+    const { answers, number_answer } = values;
 
-  const handleFormSubmit = (value) => {
-    if (questionType.value === questionTypes.NUMBER) {
-      if (
-        !getValidationBeforeSubmitting({
-          type: questionType.value,
-          setError,
-          numberAnswer,
-        })
-      )
-        return;
-    }
+    if (type === questionTypes.NUMBER) {
+      if (!getSubmittingValidation({ type, setError, number_answer })) return;
 
-    if (questionType.value === questionTypes.SINGLE) {
-      if (
-        !getValidationBeforeSubmitting({
-          type: questionType.value,
-          setError,
-          textAnswers,
-        })
-      )
-        return;
+      onSubmit({ type, ...values });
+      onCancel();
+    } else {
+      if (!getSubmittingValidation({ type, setError, answers })) return;
+
+      const filteredAnswers = answers.filter(
+        ({ value }) => value.trim() !== ""
+      );
+
+      onSubmit({ type, ...values, answers: filteredAnswers });
+      onCancel();
     }
 
     error && setError(null);
+  };
+
+  const handleCancel = () => {
+    onCancel();
   };
 
   return (
     <Formik
-      initialValues={!isNew ? question : clearFormValues}
+      initialValues={isNew ? clearFormValues : question}
       validationSchema={commonValidation}
       onSubmit={(values) => handleFormSubmit(values)}
     >
       <Form className={s.root}>
         <TextInput
           type="text"
-          name="question"
-          id="question"
+          name="title"
           label="Question"
           placeholder="Enter your question..."
         />
@@ -161,7 +89,7 @@ const QuestionForm = ({ isNew, question }) => {
             classNamePrefix="reactSelect"
             unstyled
             name="question_type"
-            defaultValue={questionType}
+            defaultValue={defaultQuestionType}
             options={questionTypeOptions}
             isSearchable={false}
             blurInputOnSelect={false}
@@ -169,31 +97,19 @@ const QuestionForm = ({ isNew, question }) => {
           />
         </div>
 
-        {questionType.value === questionTypes.NUMBER ? (
-          <NumberAnswer
-            id="number_answer"
-            name="number_answer"
-            initialValue={numberAnswer}
-            label="Answer"
-            placeholder="0"
-            onChange={handleNumberAnswerChange}
-          />
+        {type === questionTypes.NUMBER ? (
+          <>
+            <NumberAnswer name="number_answer" label="Answer" placeholder="0" />
+            {error && <div className={s.warn}>{error}</div>}
+          </>
         ) : (
-          textAnswerElements
+          <TextAnswerElements name="answers">
+            {error && <div className={s.warn}>{error}</div>}
+          </TextAnswerElements>
         )}
 
-        {error && <div className={s.warn}>{error}</div>}
-
         <div className={s.buttonsWrapper}>
-          {questionType.value !== questionTypes.NUMBER && (
-            <button
-              className={s.addAnswerBtn}
-              type="button"
-              onClick={handleAddNewTextAnswer}
-            ></button>
-          )}
-
-          <button className={s.mainBtn} type="button">
+          <button className={s.mainBtn} type="button" onClick={handleCancel}>
             Cancel
           </button>
           <button className={s.mainBtn} type="submit">
@@ -210,4 +126,6 @@ export default QuestionForm;
 QuestionForm.propTypes = {
   isNew: PropTypes.bool.isRequired,
   question: PropTypes.object,
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };

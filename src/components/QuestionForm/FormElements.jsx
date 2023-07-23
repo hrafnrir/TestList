@@ -54,7 +54,7 @@ export const TextAnswer = ({
         onChange={handleAnswerChange}
       />
       <label className={s.checkboxLabel}>
-        Is correct:{" "}
+        Is correct:
         <input
           className={s.checkbox}
           type="checkbox"

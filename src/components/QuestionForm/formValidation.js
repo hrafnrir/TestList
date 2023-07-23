@@ -5,19 +5,19 @@ import { questionTypes } from "./constants.js";
 const emptyError = (field) => `${field} is required.`;
 
 export const commonValidation = Yup.object({
-  question: Yup.string()
+  title: Yup.string()
     .trim(emptyError("Question"))
     .required(emptyError("Question")),
 });
 
-export const getValidationBeforeSubmitting = ({
+export const getSubmittingValidation = ({
   type,
   setError,
-  numberAnswer = "",
-  textAnswers = [],
+  number_answer = "",
+  answers = [],
 }) => {
   if (type === questionTypes.NUMBER) {
-    if (numberAnswer === "") {
+    if (number_answer === "") {
       setError(emptyError("Answer"));
       return;
     }
@@ -25,25 +25,23 @@ export const getValidationBeforeSubmitting = ({
     return true;
   }
 
-  if (!textAnswers.filter(({ value }) => value.trim())[1]) {
+  if (!answers.filter(({ value }) => value.trim())[1]) {
     setError("Must be two answers at minimum.");
     return;
   }
 
-  const rightAnswers = textAnswers.filter(({ isRight }) => isRight);
+  const rightAnswers = answers.filter(({ isRight }) => isRight);
 
   if (type === questionTypes.SINGLE) {
     if (!rightAnswers[0] || rightAnswers[1]) {
       setError("Must be one right answer.");
       return;
     }
-
-    return true;
-  }
-
-  if (!rightAnswers[1]) {
-    setError("Must be two right answers at minimum.");
-    return;
+  } else {
+    if (!rightAnswers[1]) {
+      setError("Must be two right answers at minimum.");
+      return;
+    }
   }
 
   return true;
