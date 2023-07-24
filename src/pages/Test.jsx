@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import cn from "classnames";
 
 import { selectSessionData } from "../model/selectors/sessionSelectors.js";
@@ -10,10 +11,12 @@ import QuestionElement from "../components/QuestionElement/QuestionElement.jsx";
 
 import s from "./styles/Test.module.scss";
 
-export const Test = () => {
+export const Test = ({ type }) => {
   const [isFormOpen, setForm] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [questionElements, setQuestionElements] = useState([]);
+
+  const isCreate = type === "create";
 
   useEffect(() => {
     questions &&
@@ -105,9 +108,16 @@ export const Test = () => {
         </div>
       </div>
       <div className={s.btnWrapper}>
-        <button className={cn(s.button, s.button_delete)}>Delete</button>
+        {!isCreate && (
+          <button className={cn(s.button, s.button_delete)}>Delete</button>
+        )}
+
         <button className={cn(s.button, s.button_save)}>Save</button>
       </div>
     </main>
   );
+};
+
+Test.propTypes = {
+  type: PropTypes.string.isRequired,
 };
