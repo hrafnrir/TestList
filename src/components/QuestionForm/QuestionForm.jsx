@@ -43,14 +43,16 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
     error && setError(null);
   };
 
-  const handleFormSubmit = (values) => {
-    const { answers, number_answer } = values;
-
+  const handleFormSubmit = ({
+    id = nanoid(),
+    title,
+    answers,
+    number_answer,
+  }) => {
     if (type === questionTypes.NUMBER) {
       if (!getSubmittingValidation({ type, setError, number_answer })) return;
 
-      onSubmit({ type, ...values });
-      onCancel();
+      onSubmit({ id, title, type, number_answer });
     } else {
       if (!getSubmittingValidation({ type, setError, answers })) return;
 
@@ -58,20 +60,17 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
         ({ value }) => value.trim() !== ""
       );
 
-      onSubmit({ type, ...values, answers: filteredAnswers });
-      onCancel();
+      onSubmit({ id, title, type, answers: filteredAnswers });
     }
 
-    error && setError(null);
-  };
-
-  const handleCancel = () => {
     onCancel();
   };
 
   return (
     <Formik
-      initialValues={isNew ? clearFormValues : question}
+      initialValues={
+        isNew ? clearFormValues : { ...clearFormValues, ...question }
+      }
       validationSchema={commonValidation}
       onSubmit={(values) => handleFormSubmit(values)}
     >
@@ -109,7 +108,7 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
         )}
 
         <div className={s.buttonsWrapper}>
-          <button className={s.mainBtn} type="button" onClick={handleCancel}>
+          <button className={s.mainBtn} type="button" onClick={onCancel}>
             Cancel
           </button>
           <button className={s.mainBtn} type="submit">
