@@ -5,6 +5,11 @@
   @include p-medium;
 
   position: relative;
+  margin: {
+    bottom: 32px;
+    left: -26px;
+  }
+
   padding: 24px;
   border: 1px var(--accent-color) solid;
   border-radius: 20px;
@@ -12,6 +17,7 @@
   @include breakpoint(medium) {
     @include p-small;
 
+    margin-bottom: 44px;
     padding: {
       top: 35px;
       bottom: 44px;

@@ -67,13 +67,17 @@
   }
 }
 
-.questionsWrapper {
-  margin-top: 32px;
+.questionsBlock {
+  margin-left: 26px;
 
-  @include breakpoint(medium) {
+  & .blockHeading {
     margin: {
-      top: 52px;
-      left: 26px;
+      bottom: 32px;
+      left: 0;
+    }
+
+    @include breakpoint(medium) {
+      margin-bottom: 52px;
     }
   }
 }

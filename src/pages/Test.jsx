@@ -87,24 +87,20 @@ export const Test = () => {
         </div>
         <div className={s.questionsBlock}>
           <h2 className={s.blockHeading}>Questions</h2>
-          <div className={s.questionsWrapper}>
-            {questionElements}
+          {questionElements}
 
-            {!isFormOpen && (
-              <button
-                className={s.addQuestionBtn}
-                type="button"
-                onClick={handleFormOpen("create")}
-              ></button>
-            )}
-          </div>
-
-          {isFormOpen === "create" && (
+          {isFormOpen === "create" ? (
             <QuestionForm
               isNew={true}
               onSubmit={handleQuestionCreate}
               onCancel={handleFormOpen(null)}
             />
+          ) : (
+            <button
+              className={s.addQuestionBtn}
+              type="button"
+              onClick={handleFormOpen("create")}
+            ></button>
           )}
         </div>
       </div>
