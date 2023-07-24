@@ -1,0 +1,14 @@
+@import "../../../styles/breakpoints", "../../../styles/buttons";
+
+.addAnswerBtn {
+  @extend %add-element-button;
+
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+
+  @include breakpoint(medium) {
+    bottom: 44px;
+    left: 44px;
+  }
+}

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import { TextAnswer } from "./FormElements.jsx";
 
-import s from "./styles/QuestionForm.module.scss";
+import s from "./styles/TextAnswerElements.module.scss";
 
 const TextAnswerElements = ({ children, ...props }) => {
   const [, { value }, { setValue }] = useField(props);
