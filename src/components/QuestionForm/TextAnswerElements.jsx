@@ -12,7 +12,6 @@ const TextAnswerElements = ({ children, ...props }) => {
 
   const [answerElements, setAnswerElements] = useState([]);
   const [removal, setRemoval] = useState(false);
-  const [removedAnswer, setRemovedAnswer] = useState(null);
 
   useEffect(() => {
     setAnswerElements(
@@ -26,19 +25,14 @@ const TextAnswerElements = ({ children, ...props }) => {
             initialValue={value}
             isRight={isRight}
             onAnswerChange={handleAnswerChange}
-            onCheckboxChange={handleAnswerCheck}
+            onCheckboxChange={handleAnswerCheck(id, !isRight)}
             removal={removal}
-            onRemove={handleAnswerRemove}
+            onRemove={handleAnswerRemove(id)}
           />
         );
       })
     );
   }, [value, removal]);
-
-  useEffect(() => {
-    removedAnswer !== null &&
-      setValue(value.filter(({ id }) => id !== removedAnswer));
-  }, [removedAnswer]);
 
   useEffect(() => {
     if (value.length < 3 && removal) setRemoval(false);
@@ -67,8 +61,8 @@ const TextAnswerElements = ({ children, ...props }) => {
     );
   };
 
-  const handleAnswerRemove = (id) => () => {
-    setRemovedAnswer(id);
+  const handleAnswerRemove = (removedAnswerId) => () => {
+    setValue(value.filter(({ id }) => id !== removedAnswerId));
   };
 
   return (

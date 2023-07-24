@@ -60,7 +60,7 @@ export const TextAnswer = ({
           type="checkbox"
           name={`${name}_checkbox`}
           checked={isRight}
-          onChange={onCheckboxChange(id, !isRight)}
+          onChange={onCheckboxChange}
         />
       </label>
 
@@ -68,7 +68,7 @@ export const TextAnswer = ({
         <button
           className={s.removeBtn}
           type="button"
-          onClick={onRemove(id)}
+          onClick={onRemove}
         ></button>
       )}
     </div>
