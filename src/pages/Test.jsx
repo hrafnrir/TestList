@@ -18,23 +18,28 @@ export const Test = () => {
   useEffect(() => {
     questions &&
       setQuestionElements(
-        questions.map((item, index) => (
-          <div key={index}>
-            <QuestionElement
-              title={item.title}
-              onFormOpen={handleFormOpen(`update_${index + 1}`)}
-            />
+        questions.map((item, index) => {
+          const name = `update_${item.id}`;
 
-            {isFormOpen === `update_${index + 1}` && (
-              <QuestionForm
-                isNew={false}
-                question={item}
-                onSubmit={handleQuestionUpdate}
-                onCancel={handleFormOpen(null)}
+          return (
+            <div key={index}>
+              <QuestionElement
+                title={item.title}
+                onFormOpen={handleFormOpen(name)}
+                onRemove={handleQuestionRemove(item.id, name)}
               />
-            )}
-          </div>
-        ))
+
+              {isFormOpen === name && (
+                <QuestionForm
+                  isNew={false}
+                  question={item}
+                  onSubmit={handleQuestionUpdate}
+                  onCancel={handleFormOpen(null)}
+                />
+              )}
+            </div>
+          );
+        })
       );
   }, [questions, isFormOpen]);
 
@@ -55,6 +60,15 @@ export const Test = () => {
       ...prevState.map((item) => (item.id === values.id ? values : item)),
     ]);
   };
+
+  const handleQuestionRemove =
+    (removedQuestionId, removedQuestionName) => () => {
+      setQuestions((prevState) => [
+        ...prevState.filter(({ id }) => id !== removedQuestionId),
+      ]);
+
+      isFormOpen === removedQuestionName && setForm(null);
+    };
 
   return !isAdminSession ? (
     <Navigate to="/" />
@@ -93,7 +107,6 @@ export const Test = () => {
             />
           )}
         </div>
-        A
       </div>
       <div className={s.btnWrapper}>
         <button className={cn(s.button, s.button_delete)}>Delete</button>
