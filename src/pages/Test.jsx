@@ -1,10 +1,9 @@
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import cn from "classnames";
 
 import { selectSessionData } from "../model/selectors/sessionSelectors.js";
-import { ADD_NEW_TEST } from "../model/slices/testSlice.js";
 
 import QuestionForm from "../components/QuestionForm/QuestionForm.jsx";
 import QuestionElement from "../components/QuestionElement/QuestionElement.jsx";
@@ -12,20 +11,49 @@ import QuestionElement from "../components/QuestionElement/QuestionElement.jsx";
 import s from "./styles/Test.module.scss";
 
 export const Test = () => {
-  const [isFormOpen, setForm] = useState(false);
+  const [isFormOpen, setForm] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [questionElements, setQuestionElements] = useState([]);
+
+  useEffect(() => {
+    questions &&
+      setQuestionElements(
+        questions.map((item, index) => (
+          <div key={index}>
+            <QuestionElement
+              title={item.title}
+              onFormOpen={handleFormOpen(`update_${index + 1}`)}
+            />
+
+            {isFormOpen === `update_${index + 1}` && (
+              <QuestionForm
+                isNew={false}
+                question={item}
+                onSubmit={handleQuestionUpdate}
+                onCancel={handleFormOpen(null)}
+              />
+            )}
+          </div>
+        ))
+      );
+  }, [questions, isFormOpen]);
 
   const isAdminSession = useSelector(selectSessionData)?.is_admin;
 
-  const dispatch = useDispatch();
   const title = useRef(null);
 
-  const handleClickOnAddQuestionButton = () => {
-    setForm(true);
+  const handleFormOpen = (form) => () => {
+    setForm(form);
   };
 
-  const hadnleSubmit = () => {
-    const value = title.current.value.trim();
-    value && dispatch(ADD_NEW_TEST({ title: value }));
+  const handleQuestionCreate = (values) => {
+    setQuestions((prevState) => [...prevState, { ...values }]);
+  };
+
+  const handleQuestionUpdate = (values) => {
+    setQuestions((prevState) => [
+      ...prevState.map((item) => (item.id === values.id ? values : item)),
+    ]);
   };
 
   return !isAdminSession ? (
@@ -46,23 +74,30 @@ export const Test = () => {
         <div className={s.questionsBlock}>
           <h2 className={s.blockHeading}>Questions</h2>
           <div className={s.questionsWrapper}>
-            <QuestionElement />
+            {questionElements}
+
             {!isFormOpen && (
               <button
                 className={s.addQuestionBtn}
                 type="button"
-                onClick={handleClickOnAddQuestionButton}
+                onClick={handleFormOpen("create")}
               ></button>
             )}
           </div>
-          {isFormOpen && <QuestionForm isNew={true} />}
+
+          {isFormOpen === "create" && (
+            <QuestionForm
+              isNew={true}
+              onSubmit={handleQuestionCreate}
+              onCancel={handleFormOpen(null)}
+            />
+          )}
         </div>
+        A
       </div>
       <div className={s.btnWrapper}>
         <button className={cn(s.button, s.button_delete)}>Delete</button>
-        <button className={cn(s.button, s.button_save)} onClick={hadnleSubmit}>
-          Save
-        </button>
+        <button className={cn(s.button, s.button_save)}>Save</button>
       </div>
     </main>
   );
