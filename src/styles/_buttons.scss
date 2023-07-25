@@ -234,12 +234,16 @@
   background-color: var(--accent-color);
   transition: 0.2s linear;
 
-  @if $type == save {
+  @if $type == neutral {
     background-color: var(--accent-color);
   }
 
-  @if $type == delete {
+  @if $type == danger {
     background-color: var(--warning-color);
+  }
+
+  @if $type == safety {
+    background-color: var(--safety-color);
   }
 
   &:active {

@@ -87,23 +87,28 @@
 }
 
 .btnWrapper {
-  display: flex;
-  justify-content: space-between;
+  text-align: center;
 
-  @include breakpoint(medium) {
-    display: block;
-    text-align: center;
+  &:has(.button_delete) {
+    display: flex;
+    justify-content: space-between;
+
+    @include breakpoint(medium) {
+      display: block;
+    }
   }
 }
 
 .button {
   &_save {
-    @include big-button(save);
+    @include big-button(neutral);
   }
 
   &_delete {
-    @include big-button(delete);
+    @include big-button(danger);
 
-    margin-right: 40px;
+    @include breakpoint(medium) {
+      margin-right: 40px;
+    }
   }
 }
