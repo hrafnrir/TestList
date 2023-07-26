@@ -1,0 +1,53 @@
+@import "../../../styles/breakpoints", "../../../styles/typography",
+  "../../../styles/buttons";
+
+.root {
+  text-align: center;
+}
+
+.heading {
+  @include h3;
+
+  margin-bottom: 8px;
+  color: var(--first-text-color);
+
+  @include breakpoint(medium) {
+    margin-bottom: 12px;
+  }
+}
+
+.message {
+  @include p-normal;
+
+  color: var(--second-text-color);
+}
+
+.btnWrapper {
+  margin-top: 24px;
+
+  @include breakpoint(medium) {
+    margin-top: 48px;
+  }
+}
+
+.button {
+  width: 100%;
+
+  @include breakpoint(medium) {
+    width: auto;
+  }
+
+  &_yes {
+    @include big-button(safety);
+  }
+
+  &_no {
+    @include big-button(danger);
+
+    margin-bottom: 12px;
+
+    @include breakpoint(medium) {
+      margin-right: 40px;
+    }
+  }
+}
