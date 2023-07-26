@@ -109,7 +109,6 @@ export const Sign = ({ type }) => {
         <ResponsePopup
           isSuccess={isSuccess}
           message={success || error}
-          visibility={isPopupOpen}
           closePopup={handleClosePopup}
         />
       )}

@@ -3,9 +3,9 @@ import cn from "classnames";
 
 import Popup from "./Popup.jsx";
 
-import s from "./styles/RespPopup.module.scss";
+import s from "./styles/ResponsePopup.module.scss";
 
-const ResponsePopup = ({ isSuccess, message, visibility, closePopup }) => {
+const ResponsePopup = ({ isSuccess, message, closePopup }) => {
   const heading = isSuccess ? "Awesome!" : "Oops! Something went wrong...";
 
   const rootClass = cn(s.root, {
@@ -18,7 +18,7 @@ const ResponsePopup = ({ isSuccess, message, visibility, closePopup }) => {
   });
 
   return (
-    <Popup visibility={visibility} closePopup={closePopup}>
+    <Popup closePopup={closePopup}>
       <div className={rootClass}>
         <h3 className={headingClass}>{heading}</h3>
         <p className={s.message}>{message}</p>

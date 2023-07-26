@@ -1,20 +1,28 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
 import s from "./styles/Popup.module.scss";
 
-const Popup = ({ visibility, closePopup, children }) => {
+const Popup = ({ closePopup, children }) => {
+  const [visibility, setVisibility] = useState(false);
+
   const popupBody = useRef(null);
 
   useEffect(() => {
+    setVisibility(true);
+
+    return () => setVisibility(false);
+  }, []);
+
+  useEffect(() => {
     const handleKeyUp = (e) => {
-      e.key === "Escape" && closePopup();
+      visibility && e.key === "Escape" && closePopup();
     };
 
     const handleClick = (e) => {
-      !popupBody.current.contains(e.target) && closePopup();
+      visibility && !popupBody.current.contains(e.target) && closePopup();
     };
 
     document.addEventListener("keyup", handleKeyUp);
@@ -24,7 +32,7 @@ const Popup = ({ visibility, closePopup, children }) => {
       document.removeEventListener("keyup", handleKeyUp);
       document.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [visibility]);
 
   const rootClass = cn(s.root, { [s.root_visible]: visibility });
   const mainWrapperClass = cn(s.mainWrapper, {
@@ -43,7 +51,6 @@ const Popup = ({ visibility, closePopup, children }) => {
 };
 
 Popup.propTypes = {
-  visibility: PropTypes.bool.isRequired,
   closePopup: PropTypes.func.isRequired,
   children: PropTypes.object.isRequired,
 };
