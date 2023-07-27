@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import cn from "classnames";
@@ -10,6 +10,7 @@ import {
   validationErrorTypes,
 } from "../components/TestComponents/constants.js";
 import { getValidation } from "../components/TestComponents/testValidation.js";
+import { ADD_NEW_TEST } from "../model/slices/testSlice.js";
 
 import QuestionForm from "../components/TestComponents/QuestionForm/QuestionForm.jsx";
 import QuestionElement from "../components/TestComponents/QuestionElement.jsx";
@@ -24,6 +25,8 @@ export const Test = ({ type }) => {
   const [validationError, setValidationError] = useState(null);
   const [isFormOpen, setForm] = useState(false);
   const [isConfirmPopupOpen, setConfirmPopup] = useState(false);
+
+  const dispatch = useDispatch();
 
   const isCreate = type === "create";
 
@@ -105,7 +108,9 @@ export const Test = ({ type }) => {
       });
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    dispatch(ADD_NEW_TEST({ title, questions }));
+  };
 
   const handleConfirm =
     ({ type, isConfirm, props }) =>
