@@ -1,5 +1,5 @@
-@import "../../../styles/breakpoints", "../../../styles/typography",
-  "../../../styles/buttons";
+@import "../../../../styles/breakpoints", "../../../../styles/typography",
+  "../../../../styles/buttons";
 
 .root {
   @include p-medium;
@@ -24,6 +24,10 @@
       left: 44px;
       right: 44px;
     }
+  }
+
+  &_new {
+    margin-bottom: 0;
   }
 }
 

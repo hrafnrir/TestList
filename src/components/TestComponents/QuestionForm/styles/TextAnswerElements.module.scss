@@ -1,4 +1,4 @@
-@import "../../../styles/breakpoints", "../../../styles/buttons";
+@import "../../../../styles/breakpoints", "../../../../styles/buttons";
 
 .addAnswerBtn {
   @extend %add-element-button;

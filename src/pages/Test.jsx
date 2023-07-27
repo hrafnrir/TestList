@@ -1,27 +1,29 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
 import { selectSessionData } from "../model/selectors/sessionSelectors.js";
+import {
+  confirmationPopupTypes,
+  validationErrorTypes,
+} from "../components/TestComponents/constants.js";
+import { getValidation } from "../components/TestComponents/testValidation.js";
 
-import QuestionForm from "../components/QuestionForm/QuestionForm.jsx";
-import QuestionElement from "../components/QuestionElement/QuestionElement.jsx";
+import QuestionForm from "../components/TestComponents/QuestionForm/QuestionForm.jsx";
+import QuestionElement from "../components/TestComponents/QuestionElement.jsx";
 import ConfirmationPopup from "../components/Popup/ConfirmationPopup.jsx";
 
 import s from "./styles/Test.module.scss";
 
-const confirmationTypes = {
-  SUBMIT_TEST: "submit_test",
-  REMOVE_QUESTION: "remove_question",
-};
-
 export const Test = ({ type }) => {
-  const [isPopupOpen, setPopup] = useState(false);
-  const [isFormOpen, setForm] = useState(false);
+  const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState([]);
   const [questionElements, setQuestionElements] = useState([]);
+  const [validationError, setValidationError] = useState(null);
+  const [isFormOpen, setForm] = useState(false);
+  const [isConfirmPopupOpen, setConfirmPopup] = useState(false);
 
   const isCreate = type === "create";
 
@@ -37,7 +39,7 @@ export const Test = ({ type }) => {
                 title={item.title}
                 onFormOpen={handleFormOpen(name)}
                 onRemove={handlePopupOpen({
-                  type: confirmationTypes.REMOVE_QUESTION,
+                  type: confirmationPopupTypes.REMOVE_QUESTION,
                   message: `Do you want to remove question "${item.title}"?`,
                   props: { id: item.id, name },
                 })}
@@ -59,7 +61,14 @@ export const Test = ({ type }) => {
 
   const isAdminSession = useSelector(selectSessionData)?.is_admin;
 
-  const title = useRef(null);
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+    validationError?.[validationErrorTypes.TITLE] &&
+      setValidationError((prevState) => ({
+        ...prevState,
+        [validationErrorTypes.TITLE]: null,
+      }));
+  };
 
   const handleFormOpen = (form) => () => {
     setForm(form);
@@ -67,6 +76,11 @@ export const Test = ({ type }) => {
 
   const handleQuestionCreate = (values) => {
     setQuestions((prevState) => [...prevState, { ...values }]);
+    validationError?.[validationErrorTypes.QUESTION] &&
+      setValidationError((prevState) => ({
+        ...prevState,
+        [validationErrorTypes.QUESTION]: null,
+      }));
   };
 
   const handleQuestionUpdate = (values) => {
@@ -83,26 +97,34 @@ export const Test = ({ type }) => {
     isFormOpen === name && setForm(null);
   };
 
+  const handleClickOnSaveButton = () => {
+    getValidation({ title, questions, setError: setValidationError }) &&
+      setConfirmPopup({
+        type: confirmationPopupTypes.SUBMIT_TEST,
+        message: "Do you want to submit this test?",
+      });
+  };
+
   const handleSubmit = () => {};
 
   const handleConfirm =
     ({ type, isConfirm, props }) =>
     () => {
       if (isConfirm) {
-        type === confirmationTypes.SUBMIT_TEST && handleSubmit();
-        type === confirmationTypes.REMOVE_QUESTION &&
+        type === confirmationPopupTypes.SUBMIT_TEST && handleSubmit();
+        type === confirmationPopupTypes.REMOVE_QUESTION &&
           handleQuestionRemove(props);
       }
 
-      setPopup(false);
+      setConfirmPopup(false);
     };
 
   const handlePopupOpen = (props) => () => {
-    setPopup(props);
+    setConfirmPopup(props);
   };
 
   const handlePopupClose = () => {
-    setPopup(false);
+    setConfirmPopup(false);
   };
 
   return !isAdminSession ? (
@@ -117,21 +139,36 @@ export const Test = ({ type }) => {
             <input
               className={s.input}
               type="text"
+              value={title}
               placeholder="Enter test title..."
-              ref={title}
+              onChange={handleTitleChange}
             />
+
+            {validationError?.[validationErrorTypes.TITLE] && (
+              <div className={cn(s.warn, s.warn_title)}>
+                {validationError[validationErrorTypes.TITLE]}
+              </div>
+            )}
           </div>
           <div className={s.questionsBlock}>
             <h2 className={s.blockHeading}>Questions</h2>
             {questionElements}
 
-            {isFormOpen === "create" ? (
+            {isFormOpen === "create" && (
               <QuestionForm
                 isNew={true}
                 onSubmit={handleQuestionCreate}
                 onCancel={handleFormOpen(null)}
               />
-            ) : (
+            )}
+
+            {validationError?.[validationErrorTypes.QUESTION] && (
+              <div className={s.warn}>
+                {validationError[validationErrorTypes.QUESTION]}
+              </div>
+            )}
+
+            {isFormOpen !== "create" && (
               <button
                 className={s.addQuestionBtn}
                 type="button"
@@ -147,21 +184,18 @@ export const Test = ({ type }) => {
 
           <button
             className={cn(s.button, s.button_save)}
-            onClick={handlePopupOpen({
-              type: confirmationTypes.SUBMIT_TEST,
-              message: "Do you want to submit this test?",
-            })}
+            onClick={handleClickOnSaveButton}
           >
             Save
           </button>
         </div>
       </main>
 
-      {isPopupOpen && (
+      {isConfirmPopupOpen && (
         <ConfirmationPopup
-          type={isPopupOpen.type}
-          message={isPopupOpen.message}
-          props={isPopupOpen.props}
+          type={isConfirmPopupOpen.type}
+          message={isConfirmPopupOpen.message}
+          props={isConfirmPopupOpen.props}
           closePopup={handlePopupClose}
           getConfirmation={handleConfirm}
         />

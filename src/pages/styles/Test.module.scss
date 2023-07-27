@@ -112,3 +112,14 @@
     }
   }
 }
+
+.warn {
+  @include p-small;
+
+  color: var(--warning-color);
+  margin: 12px 0;
+
+  &_title {
+    margin-left: 26px;
+  }
+}

@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-import { questionTypes } from "./constants.js";
+import { questionTypes } from "../constants.js";
 
 const emptyError = (field) => `${field} is required.`;
 

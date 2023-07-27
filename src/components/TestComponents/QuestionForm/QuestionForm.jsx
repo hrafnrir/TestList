@@ -3,8 +3,9 @@ import { Form, Formik } from "formik";
 import Select from "react-select";
 import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
+import cn from "classnames";
 
-import { questionTypes } from "./constants.js";
+import { questionTypes } from "../constants.js";
 import { commonValidation, getSubmittingValidation } from "./formValidation.js";
 
 import TextAnswerElements from "./TextAnswerElements.jsx";
@@ -66,6 +67,8 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
     onCancel();
   };
 
+  const rootClass = cn(s.root, { [s.root_new]: isNew });
+
   return (
     <Formik
       initialValues={
@@ -74,7 +77,7 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
       validationSchema={commonValidation}
       onSubmit={(values) => handleFormSubmit(values)}
     >
-      <Form className={s.root}>
+      <Form className={rootClass}>
         <TextInput
           type="text"
           name="title"
