@@ -21,21 +21,21 @@ const questionTypeOptions = [
 ];
 
 const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
-  const [type, setType] = useState(
-    isNew ? questionTypes.SINGLE : question.type
+  const [question_type, setType] = useState(
+    isNew ? questionTypes.SINGLE : question.question_type
   );
   const [error, setError] = useState(null);
 
   const defaultQuestionType = questionTypeOptions.find(
-    ({ value }) => value === type
+    ({ value }) => value === question_type
   );
 
   const clearFormValues = {
     title: "",
-    number_answer: "",
+    answer: "",
     answers: [
-      { id: nanoid(), value: "", isRight: false },
-      { id: nanoid(), value: "", isRight: false },
+      { id: nanoid(), text: "", is_right: false },
+      { id: nanoid(), text: "", is_right: false },
     ],
   };
 
@@ -44,24 +44,18 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
     error && setError(null);
   };
 
-  const handleFormSubmit = ({
-    id = nanoid(),
-    title,
-    answers,
-    number_answer,
-  }) => {
-    if (type === questionTypes.NUMBER) {
-      if (!getSubmittingValidation({ type, setError, number_answer })) return;
+  const handleFormSubmit = ({ id = nanoid(), title, answers, answer }) => {
+    if (question_type === questionTypes.NUMBER) {
+      if (!getSubmittingValidation({ question_type, setError, answer })) return;
 
-      onSubmit({ id, title, type, number_answer });
+      onSubmit({ id, title, question_type, answer });
     } else {
-      if (!getSubmittingValidation({ type, setError, answers })) return;
+      if (!getSubmittingValidation({ question_type, setError, answers }))
+        return;
 
-      const filteredAnswers = answers.filter(
-        ({ value }) => value.trim() !== ""
-      );
+      const filteredAnswers = answers.filter(({ text }) => text.trim() !== "");
 
-      onSubmit({ id, title, type, answers: filteredAnswers });
+      onSubmit({ id, title, question_type, answers: filteredAnswers });
     }
 
     onCancel();
@@ -99,9 +93,9 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
           />
         </div>
 
-        {type === questionTypes.NUMBER ? (
+        {question_type === questionTypes.NUMBER ? (
           <>
-            <NumberAnswer name="number_answer" label="Answer" placeholder="0" />
+            <NumberAnswer name="answer" label="Answer" placeholder="0" />
             {error && <div className={s.warn}>{error}</div>}
           </>
         ) : (

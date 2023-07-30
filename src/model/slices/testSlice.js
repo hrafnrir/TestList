@@ -2,8 +2,6 @@ import { createSlice, createAction } from "@reduxjs/toolkit";
 
 const initialState = {
   tests: [],
-  questions: [],
-  answers: [],
 };
 
 const testSlice = createSlice({
@@ -29,7 +27,11 @@ const testSlice = createSlice({
     },
 
     addNewQuestion(state, action) {
-      state.questions.unshift(action.payload);
+      state.tests.map(({ id, questions }) => {
+        if (id === action.payload.testId) {
+          questions.unshift(action.payload.question);
+        }
+      });
     },
 
     updateQuestion(state, action) {
@@ -43,7 +45,15 @@ const testSlice = createSlice({
     },
 
     addNewAnswer(state, action) {
-      state.answers.unshift(action.payload);
+      state.tests.map(({ id, questions }) => {
+        if (id === action.payload.testId) {
+          questions.map(({ id, answers }) => {
+            if (id === action.payload.questionId) {
+              answers.unshift(action.payload.answer);
+            }
+          });
+        }
+      });
     },
 
     updateAnswer(state, action) {

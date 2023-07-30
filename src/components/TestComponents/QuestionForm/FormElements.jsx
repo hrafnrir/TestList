@@ -26,7 +26,7 @@ export const TextAnswer = ({
   id,
   label,
   initialValue,
-  isRight,
+  is_right,
   onAnswerChange,
   onCheckboxChange,
   removal,
@@ -59,7 +59,7 @@ export const TextAnswer = ({
           className={s.checkbox}
           type="checkbox"
           name={`${name}_checkbox`}
-          checked={isRight}
+          checked={is_right}
           onChange={onCheckboxChange}
         />
       </label>
@@ -137,7 +137,7 @@ TextAnswer.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   initialValue: PropTypes.string.isRequired,
-  isRight: PropTypes.bool.isRequired,
+  is_right: PropTypes.bool.isRequired,
   onAnswerChange: PropTypes.func.isRequired,
   onCheckboxChange: PropTypes.func.isRequired,
   removal: PropTypes.bool.isRequired,

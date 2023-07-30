@@ -15,17 +15,17 @@ const TextAnswerElements = ({ children, ...props }) => {
 
   useEffect(() => {
     setAnswerElements(
-      value.map(({ id, value, isRight }, index) => {
+      value.map(({ id, text, is_right }, index) => {
         return (
           <TextAnswer
             key={id}
             id={id}
             name={`text_answer_${id}`}
             label={`Answer #${index + 1}`}
-            initialValue={value}
-            isRight={isRight}
+            initialValue={text}
+            is_right={is_right}
             onAnswerChange={handleAnswerChange}
-            onCheckboxChange={handleAnswerCheck(id, !isRight)}
+            onCheckboxChange={handleAnswerCheck(id, !is_right)}
             removal={removal}
             onRemove={handleAnswerRemove(id)}
           />
@@ -40,13 +40,13 @@ const TextAnswerElements = ({ children, ...props }) => {
   }, [value.length]);
 
   const handleTextAnswerCreate = () => {
-    setValue([...value, { id: nanoid(), value: "", isRight: false }]);
+    setValue([...value, { id: nanoid(), text: "", is_right: false }]);
   };
 
-  const handleAnswerChange = (id, updatedValue) => {
+  const handleAnswerChange = (id, updatedText) => {
     setValue(
       value.map((item) => {
-        if (item.id === id) item.value = updatedValue;
+        if (item.id === id) item.text = updatedText;
         return item;
       })
     );
@@ -55,7 +55,7 @@ const TextAnswerElements = ({ children, ...props }) => {
   const handleAnswerCheck = (id, updatedIsRight) => () => {
     setValue(
       value.map((item) => {
-        if (item.id === id) item.isRight = updatedIsRight;
+        if (item.id === id) item.is_right = updatedIsRight;
         return item;
       })
     );

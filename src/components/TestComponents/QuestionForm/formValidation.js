@@ -11,13 +11,13 @@ export const commonValidation = Yup.object({
 });
 
 export const getSubmittingValidation = ({
-  type,
+  question_type,
   setError,
-  number_answer = "",
+  answer = "",
   answers = [],
 }) => {
-  if (type === questionTypes.NUMBER) {
-    if (number_answer === "") {
+  if (question_type === questionTypes.NUMBER) {
+    if (answer === "") {
       setError(emptyError("Answer"));
       return;
     }
@@ -25,14 +25,14 @@ export const getSubmittingValidation = ({
     return true;
   }
 
-  if (!answers.filter(({ value }) => value.trim())[1]) {
+  if (!answers.filter(({ text }) => text.trim())[1]) {
     setError("Must be two answers at minimum.");
     return;
   }
 
-  const rightAnswers = answers.filter(({ isRight }) => isRight);
+  const rightAnswers = answers.filter(({ is_right }) => is_right);
 
-  if (type === questionTypes.SINGLE) {
+  if (question_type === questionTypes.SINGLE) {
     if (!rightAnswers[0] || rightAnswers[1]) {
       setError("Must be one right answer.");
       return;

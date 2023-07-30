@@ -16,6 +16,7 @@ export function* fetchTests() {
 
   try {
     const resp = yield call(instance, "tests");
+
     yield put(getTests(resp.data));
     yield put(addLoading(false));
   } catch (e) {
@@ -30,35 +31,46 @@ export function* fetchTests() {
   }
 }
 
-export function* fetchNewAnswer({ path, answer }) {
+export function* fetchNewAnswer({ testId, questionId, path, answer }) {
   const resp = yield call(instance.post, `${path}/answers`, answer);
-  yield put(addNewAnswer(resp.data));
+
+  yield put(addNewAnswer({ testId, questionId, answer: resp.data }));
 }
 
-export function* fetchNewQuestion({ path, question }) {
+export function* fetchNewQuestion({ testId, path, question }) {
   if (question.answers) {
     const { title, question_type, answers } = question;
-
     const resp = yield call(instance.post, `${path}/questions`, {
       title,
       question_type,
     });
-    yield put(addNewQuestion(resp.data));
 
-    const answersPayload = yield answers.map(({ value, isRight }) => ({
-      text: value,
-      is_right: isRight,
-    }));
+    yield put(
+      addNewQuestion({
+        testId,
+        question: {
+          id: resp.data.id,
+          title: resp.data.title,
+          question_type: resp.data.question_type,
+          answers: resp.data.answers,
+        },
+      })
+    );
 
-    for (const answer of answersPayload) {
+    for (const answer of answers) {
       yield call(fetchNewAnswer, {
+        testId,
+        questionId: resp.data.id,
         path: `/questions/${resp.data.id}`,
-        answer,
+        answer: { text: answer.text, is_right: answer.is_right },
       });
     }
   } else {
     const resp = yield call(instance.post, `${path}/questions`, question);
-    yield put(addNewQuestion(resp.data));
+    const { id, title, question_type, answer } = resp.data;
+    yield put(
+      addNewQuestion({ testId, question: { id, title, question_type, answer } })
+    );
   }
 }
 
@@ -67,17 +79,19 @@ export function* fetchNewTest({ payload: { title, questions } }) {
 
   try {
     const resp = yield call(instance.post, "tests", { title });
+
     yield put(addNewTest(resp.data));
 
     const questionsPayload = yield questions.map(
-      ({ title, type, answers, number_answer }) =>
-        number_answer
-          ? { title, question_type: type, answer: +number_answer }
-          : { title, question_type: type, answers }
+      ({ title, question_type, answers, answer }) =>
+        answer
+          ? { title, question_type, answer: +answer }
+          : { title, question_type, answers }
     );
 
     for (const question of questionsPayload) {
       yield call(fetchNewQuestion, {
+        testId: resp.data.id,
         path: `/tests/${resp.data.id}`,
         question,
       });
