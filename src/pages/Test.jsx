@@ -4,7 +4,10 @@ import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
-import { selectSessionData } from "../model/selectors/sessionSelectors.js";
+import {
+  selectLoading,
+  selectSessionData,
+} from "../model/selectors/sessionSelectors.js";
 import {
   confirmationPopupTypes,
   validationErrorTypes,
@@ -15,6 +18,8 @@ import { ADD_NEW_TEST } from "../model/slices/testSlice.js";
 import QuestionForm from "../components/TestComponents/QuestionForm/QuestionForm.jsx";
 import QuestionElement from "../components/TestComponents/QuestionElement.jsx";
 import ConfirmationPopup from "../components/Popup/ConfirmationPopup.jsx";
+import ResponsePopup from "../components/Popup/ResponsePopup.jsx";
+import Loading from "../components/Loading/Loading.jsx";
 
 import s from "./styles/Test.module.scss";
 
@@ -27,6 +32,8 @@ export const Test = ({ type }) => {
   const [isConfirmPopupOpen, setConfirmPopup] = useState(false);
 
   const dispatch = useDispatch();
+
+  const loading = useSelector(selectLoading);
 
   const isCreate = type === "create";
 
@@ -138,6 +145,9 @@ export const Test = ({ type }) => {
     <>
       <main className={s.root}>
         <h1 className={s.pageHeading}>Create test</h1>
+
+        {loading && <Loading />}
+
         <div className={s.contentWrapper}>
           <div className={s.titleBlock}>
             <h2 className={s.blockHeading}>Title</h2>
@@ -205,6 +215,8 @@ export const Test = ({ type }) => {
           getConfirmation={handleConfirm}
         />
       )}
+
+        <ResponsePopup path='/'/>
     </>
   );
 };
