@@ -18,8 +18,8 @@ import { ADD_NEW_TEST } from "../model/slices/testSlice.js";
 import QuestionForm from "../components/TestComponents/QuestionForm/QuestionForm.jsx";
 import QuestionElement from "../components/TestComponents/QuestionElement.jsx";
 import ConfirmationPopup from "../components/Popup/ConfirmationPopup.jsx";
-import ResponsePopup from "../components/Popup/ResponsePopup.jsx";
 import Loading from "../components/Loading/Loading.jsx";
+import ResponsePopup from "../components/Popup/ResponsePopup.jsx";
 
 import s from "./styles/Test.module.scss";
 
@@ -28,8 +28,8 @@ export const Test = ({ type }) => {
   const [questions, setQuestions] = useState([]);
   const [questionElements, setQuestionElements] = useState([]);
   const [validationError, setValidationError] = useState(null);
-  const [isFormOpen, setForm] = useState(false);
-  const [isConfirmPopupOpen, setConfirmPopup] = useState(false);
+  const [questionForm, setQuestionForm] = useState(null);
+  const [confirmationPopup, setConfirmationPopup] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -47,27 +47,27 @@ export const Test = ({ type }) => {
             <div key={index}>
               <QuestionElement
                 title={item.title}
-                onFormOpen={handleFormOpen(name)}
-                onRemove={handlePopupOpen({
+                onFormOpen={handleQuestionForm(name)}
+                onRemove={handleConfirmationPopupOpen({
                   type: confirmationPopupTypes.REMOVE_QUESTION,
                   message: `Do you want to remove question "${item.title}"?`,
                   props: { id: item.id, name },
                 })}
               />
 
-              {isFormOpen === name && (
+              {questionForm === name && (
                 <QuestionForm
                   isNew={false}
                   question={item}
                   onSubmit={handleQuestionUpdate}
-                  onCancel={handleFormOpen(null)}
+                  onCancel={handleQuestionForm(null)}
                 />
               )}
             </div>
           );
         })
       );
-  }, [questions, isFormOpen]);
+  }, [questions, questionForm]);
 
   const isAdminSession = useSelector(selectSessionData)?.is_admin;
 
@@ -80,8 +80,8 @@ export const Test = ({ type }) => {
       }));
   };
 
-  const handleFormOpen = (form) => () => {
-    setForm(form);
+  const handleQuestionForm = (form) => () => {
+    setQuestionForm(form);
   };
 
   const handleQuestionCreate = (values) => {
@@ -104,12 +104,12 @@ export const Test = ({ type }) => {
       ...prevState.filter((item) => item.id !== id),
     ]);
 
-    isFormOpen === name && setForm(null);
+    questionForm === name && setQuestionForm(null);
   };
 
   const handleClickOnSaveButton = () => {
     getValidation({ title, questions, setError: setValidationError }) &&
-      setConfirmPopup({
+      setConfirmationPopup({
         type: confirmationPopupTypes.SUBMIT_TEST,
         message: "Do you want to submit this test?",
       });
@@ -119,8 +119,16 @@ export const Test = ({ type }) => {
     dispatch(ADD_NEW_TEST({ title, questions }));
   };
 
+  const handleConfirmationPopupOpen = (props) => () => {
+    setConfirmationPopup(props);
+  };
+
+  const handleConfirmationPopupClose = () => {
+    setConfirmationPopup(null);
+  };
+
   const handleConfirm =
-    ({ type, isConfirm, props }) =>
+    ({ isConfirm, type, props }) =>
     () => {
       if (isConfirm) {
         type === confirmationPopupTypes.SUBMIT_TEST && handleSubmit();
@@ -128,16 +136,8 @@ export const Test = ({ type }) => {
           handleQuestionRemove(props);
       }
 
-      setConfirmPopup(false);
+      setConfirmationPopup(null);
     };
-
-  const handlePopupOpen = (props) => () => {
-    setConfirmPopup(props);
-  };
-
-  const handlePopupClose = () => {
-    setConfirmPopup(false);
-  };
 
   return !isAdminSession ? (
     <Navigate to="/" />
@@ -169,11 +169,11 @@ export const Test = ({ type }) => {
             <h2 className={s.blockHeading}>Questions</h2>
             {questionElements}
 
-            {isFormOpen === "create" && (
+            {questionForm === "create" && (
               <QuestionForm
                 isNew={true}
                 onSubmit={handleQuestionCreate}
-                onCancel={handleFormOpen(null)}
+                onCancel={handleQuestionForm(null)}
               />
             )}
 
@@ -183,11 +183,11 @@ export const Test = ({ type }) => {
               </div>
             )}
 
-            {isFormOpen !== "create" && (
+            {questionForm !== "create" && (
               <button
                 className={s.addQuestionBtn}
                 type="button"
-                onClick={handleFormOpen("create")}
+                onClick={handleQuestionForm("create")}
               ></button>
             )}
           </div>
@@ -206,17 +206,17 @@ export const Test = ({ type }) => {
         </div>
       </main>
 
-      {isConfirmPopupOpen && (
+      {confirmationPopup && (
         <ConfirmationPopup
-          type={isConfirmPopupOpen.type}
-          message={isConfirmPopupOpen.message}
-          props={isConfirmPopupOpen.props}
-          closePopup={handlePopupClose}
+          type={confirmationPopup.type}
+          message={confirmationPopup.message}
+          props={confirmationPopup.props}
+          closePopup={handleConfirmationPopupClose}
           getConfirmation={handleConfirm}
         />
       )}
 
-        <ResponsePopup path='/'/>
+      <ResponsePopup path="/" />
     </>
   );
 };

@@ -20,19 +20,15 @@ const ConfirmationPopup = ({
         <div className={s.btnWrapper}>
           <button
             className={cn(s.button, s.button_no)}
-            onClick={getConfirmation({
-              type,
-              isConfirm: false,
-              props,
-            })}
+            onClick={getConfirmation({ isConfirm: false })}
           >
             No, thanks...
           </button>
           <button
             className={cn(s.button, s.button_yes)}
             onClick={getConfirmation({
-              type,
               isConfirm: true,
+              type,
               props,
             })}
           >
