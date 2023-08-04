@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects";
 
 import { instance } from "./instance.js";
-import { addLoading, addError } from "../slices/sessionSlice.js";
+import { addLoading, addError, addSuccess } from "../slices/sessionSlice.js";
 import {
   getTests,
   addNewTest,
@@ -10,6 +10,7 @@ import {
   updateTest,
   deleteTest,
 } from "../slices/testSlice.js";
+import { questionTypes } from "../../components/TestComponents/constants.js";
 
 export function* fetchTests() {
   yield put(addLoading(true));
@@ -17,7 +18,7 @@ export function* fetchTests() {
   try {
     const resp = yield call(instance, "tests");
 
-    yield put(getTests(resp.data));
+    yield put(getTests(resp.data.tests));
     yield put(addLoading(false));
   } catch (e) {
     yield put(
@@ -38,24 +39,18 @@ export function* fetchNewAnswer({ testId, questionId, path, answer }) {
 }
 
 export function* fetchNewQuestion({ testId, path, question }) {
-  if (question.answers) {
+  if (question.question_type === questionTypes.NUMBER) {
+    const resp = yield call(instance.post, `${path}/questions`, question);
+
+    yield put(addNewQuestion({ testId, question: { ...resp.data } }));
+  } else {
     const { title, question_type, answers } = question;
     const resp = yield call(instance.post, `${path}/questions`, {
       title,
       question_type,
     });
 
-    yield put(
-      addNewQuestion({
-        testId,
-        question: {
-          id: resp.data.id,
-          title: resp.data.title,
-          question_type: resp.data.question_type,
-          answers: resp.data.answers,
-        },
-      })
-    );
+    yield put(addNewQuestion({ testId, question: { ...resp.data } }));
 
     for (const answer of answers) {
       yield call(fetchNewAnswer, {
@@ -65,12 +60,6 @@ export function* fetchNewQuestion({ testId, path, question }) {
         answer: { text: answer.text, is_right: answer.is_right },
       });
     }
-  } else {
-    const resp = yield call(instance.post, `${path}/questions`, question);
-    const { id, title, question_type, answer } = resp.data;
-    yield put(
-      addNewQuestion({ testId, question: { id, title, question_type, answer } })
-    );
   }
 }
 
@@ -84,7 +73,7 @@ export function* fetchNewTest({ payload: { title, questions } }) {
 
     const questionsPayload = yield questions.map(
       ({ title, question_type, answers, answer }) =>
-        answer
+        question_type === questionTypes.NUMBER
           ? { title, question_type, answer: +answer }
           : { title, question_type, answers }
     );
@@ -97,6 +86,7 @@ export function* fetchNewTest({ payload: { title, questions } }) {
       });
     }
 
+    yield put(addSuccess(`Success to create "${resp.data.title}" test!`));
     yield put(addLoading(false));
   } catch (e) {
     yield put(

@@ -28,9 +28,8 @@ const testSlice = createSlice({
 
     addNewQuestion(state, action) {
       state.tests.map(({ id, questions }) => {
-        if (id === action.payload.testId) {
+        id === action.payload.testId &&
           questions.unshift(action.payload.question);
-        }
       });
     },
 
@@ -47,11 +46,11 @@ const testSlice = createSlice({
     addNewAnswer(state, action) {
       state.tests.map(({ id, questions }) => {
         if (id === action.payload.testId) {
-          questions.map(({ id, answers }) => {
-            if (id === action.payload.questionId) {
-              answers.unshift(action.payload.answer);
-            }
-          });
+          questions.map(
+            ({ id, answers }) =>
+              id === action.payload.questionId &&
+              answers.unshift(action.payload.answer)
+          );
         }
       });
     },
