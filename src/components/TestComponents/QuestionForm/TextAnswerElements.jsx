@@ -14,6 +14,14 @@ const TextAnswerElements = ({ children, ...props }) => {
   const [removal, setRemoval] = useState(false);
 
   useEffect(() => {
+    !value.length &&
+      setValue([
+        { id: nanoid(), text: "", is_right: false },
+        { id: nanoid(), text: "", is_right: false },
+      ]);
+  }, []);
+
+  useEffect(() => {
     setAnswerElements(
       value.map(({ id, text, is_right }, index) => {
         return (

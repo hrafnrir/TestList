@@ -20,9 +20,9 @@ const questionTypeOptions = [
   { value: questionTypes.NUMBER, label: "Numerical answer" },
 ];
 
-const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
+const QuestionForm = ({ isNew, question = {}, onSubmit, onCancel }) => {
   const [question_type, setType] = useState(
-    isNew ? questionTypes.SINGLE : question.question_type
+    question.question_type || questionTypes.SINGLE
   );
   const [error, setError] = useState(null);
 
@@ -30,13 +30,12 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
     ({ value }) => value === question_type
   );
 
-  const clearFormValues = {
-    title: "",
-    answer: "",
-    answers: [
-      { id: nanoid(), text: "", is_right: false },
-      { id: nanoid(), text: "", is_right: false },
-    ],
+  const { title, answers, answer } = question;
+
+  const initialFormValues = {
+    title: title || "",
+    answer: answer || "",
+    answers: answers || [],
   };
 
   const handleQuestionTypeChange = ({ value }) => {
@@ -44,7 +43,9 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
     error && setError(null);
   };
 
-  const handleFormSubmit = ({ id = nanoid(), title, answers, answer }) => {
+  const handleFormSubmit = ({ title, answers, answer }) => {
+    const id = question.id || nanoid();
+
     if (question_type === questionTypes.NUMBER) {
       if (!getSubmittingValidation({ question_type, setError, answer })) return;
 
@@ -65,9 +66,7 @@ const QuestionForm = ({ isNew, question, onSubmit, onCancel }) => {
 
   return (
     <Formik
-      initialValues={
-        isNew ? clearFormValues : { ...clearFormValues, ...question }
-      }
+      initialValues={initialFormValues}
       validationSchema={commonValidation}
       onSubmit={(values) => handleFormSubmit(values)}
     >

@@ -13,8 +13,8 @@ export const commonValidation = Yup.object({
 export const getSubmittingValidation = ({
   question_type,
   setError,
-  answer = "",
-  answers = [],
+  answer,
+  answers,
 }) => {
   if (question_type === questionTypes.NUMBER) {
     if (answer === "") {

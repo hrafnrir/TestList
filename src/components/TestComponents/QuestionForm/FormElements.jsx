@@ -76,7 +76,7 @@ export const TextAnswer = ({
 };
 
 export const NumberAnswer = ({ label, ...props }) => {
-  const [field, { value, initialValue }, { setValue }] = useField(props);
+  const [{ name }, { value }, { setValue }] = useField(props);
 
   const handleCount = (term) => () => {
     setValue(+value + term);
@@ -100,7 +100,7 @@ export const NumberAnswer = ({ label, ...props }) => {
 
   return (
     <div className={s.wrapper}>
-      <label className={s.inputLabel} htmlFor={field.name}>
+      <label className={s.inputLabel} htmlFor={name}>
         {label}:
       </label>
       <div className={s.numberInputWrapper}>
@@ -112,9 +112,8 @@ export const NumberAnswer = ({ label, ...props }) => {
         <input
           className={s.numberInput}
           type="text"
-          id={field.name}
-          value={initialValue}
-          {...field}
+          id={name}
+          value={value}
           {...props}
           onChange={handleNumberChange}
           onBlur={handleBlur}
